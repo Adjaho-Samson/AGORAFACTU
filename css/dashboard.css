@@ -1,0 +1,165 @@
+/* ==========================================================================
+   Agora Factures — tableau de bord
+   ========================================================================== */
+
+.grille-kpi {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--e4);
+  margin-bottom: var(--e5);
+}
+
+.carte-stat {
+  background: var(--blanc);
+  border: 1px solid var(--bord);
+  border-radius: var(--rayon-grand);
+  padding: var(--e4);
+  box-shadow: var(--ombre);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border-top: 3px solid var(--bleu);
+}
+.carte-stat .libelle {
+  font-size: .78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  color: var(--texte-doux);
+}
+.carte-stat .valeur {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--bleu-fonce);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.15;
+  word-break: break-word;
+}
+.carte-stat .aide { font-size: .78rem; color: var(--texte-faible); }
+
+.carte-stat.encaisse { border-top-color: var(--vert); }
+.carte-stat.encaisse .valeur { color: var(--vert); }
+.carte-stat.reste { border-top-color: var(--orange-vif); }
+.carte-stat.reste .valeur { color: var(--orange-texte); }
+.carte-stat.retard { border-top-color: var(--rouge); }
+.carte-stat.retard .valeur { color: var(--rouge); }
+.carte-stat.annule { border-top-color: var(--texte-faible); }
+.carte-stat.annule .valeur { color: var(--texte-doux); }
+
+.grille-graphiques {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: var(--e5);
+}
+@media (max-width: 900px) {
+  .grille-graphiques { grid-template-columns: 1fr; }
+}
+
+.graphique { width: 100%; height: auto; display: block; }
+.graphe-axe { font-size: 10px; fill: var(--texte-faible); }
+@media (max-width: 640px) { .graphe-axe { font-size: 11px; } }
+
+.graphe-legende {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e4);
+  margin-top: var(--e3);
+  font-size: .82rem;
+  color: var(--texte-doux);
+}
+.graphe-legende span { display: inline-flex; align-items: center; gap: 6px; }
+.graphe-legende .puce { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+.graphe-legende .puce-facture { background: #a9caf5; }
+.graphe-legende .puce-encaisse { background: var(--bleu-fonce); }
+
+.repartition { display: flex; flex-direction: column; gap: var(--e3); }
+.repartition-ligne {
+  display: grid;
+  grid-template-columns: minmax(88px, 34%) 1fr auto;
+  align-items: center;
+  gap: var(--e3);
+  font-size: .86rem;
+}
+.repartition-piste {
+  height: 10px;
+  background: var(--gris);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.repartition-barre { height: 100%; border-radius: 999px; transition: width .25s ease; }
+.repartition-valeur { color: var(--texte-doux); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.repartition-libelle { color: var(--texte); font-weight: 600; }
+
+@media (max-width: 640px) {
+  .grille-kpi { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: var(--e3); }
+  .carte-stat { padding: var(--e3); }
+  .carte-stat .valeur { font-size: 1.2rem; }
+  .repartition-ligne { grid-template-columns: minmax(70px, 40%) 1fr; }
+  .repartition-valeur { grid-column: 1 / -1; }
+}
+
+@media (max-width: 360px) {
+  .grille-kpi { grid-template-columns: 1fr 1fr; }
+  .carte-stat { padding: var(--e2) var(--e3); }
+  .carte-stat .valeur { font-size: 1.05rem; }
+  .carte-stat .libelle { font-size: .7rem; letter-spacing: .4px; }
+}
+
+/* Tableaux récents sur mobile : chaque ligne devient une fiche */
+@media (max-width: 768px) {
+  .table-enveloppe table.tableau thead { display: none; }
+  .table-enveloppe table.tableau,
+  .table-enveloppe table.tableau tbody,
+  .table-enveloppe table.tableau tr,
+  .table-enveloppe table.tableau td { display: block; width: 100%; }
+  .table-enveloppe table.tableau tr {
+    border: 1px solid var(--bord);
+    border-radius: var(--rayon);
+    margin-bottom: var(--e3);
+    padding: var(--e3);
+    background: var(--blanc);
+    box-shadow: var(--ombre);
+  }
+  .table-enveloppe table.tableau td {
+    border: 0;
+    padding: 6px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--e2);
+    text-align: left !important;
+  }
+  .table-enveloppe table.tableau td::before {
+    content: attr(data-libelle);
+    font-weight: 700;
+    font-size: .75rem;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    color: var(--texte-faible);
+    flex: 0 0 auto;
+    white-space: nowrap;
+    min-width: 75px;
+  }
+  .table-enveloppe table.tableau td.actions {
+    display: block;
+    margin-top: var(--e2);
+    padding-top: var(--e2);
+    border-top: 1px solid var(--gris);
+  }
+  .table-enveloppe table.tableau td.actions::before { display: none; }
+  .table-enveloppe table.tableau td.actions .groupe-boutons {
+    justify-content: flex-end;
+  }
+  .table-enveloppe table.tableau td.nombre.montant { font-size: 1.05rem; font-weight: 700; }
+  .table-enveloppe table.tableau td[data-libelle="Statut"] {
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+  .table-enveloppe table.tableau td[data-libelle="Statut"]::before {
+    margin-right: auto;
+    padding-top: 2px;
+  }
+  .table-enveloppe table.tableau td[data-libelle="Statut"] .pastille {
+    margin-left: auto;
+  }
+}

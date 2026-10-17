@@ -1,0 +1,15 @@
+# Dépendances de développement (tests uniquement)
+node_modules/
+package-lock.json
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+*.log
+
+# Compilés Python (outils de développement)
+__pycache__/
+*.pyc
+
+# Éventuels exports locaux
+*.local.json

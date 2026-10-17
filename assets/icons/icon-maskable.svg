@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="Agora Factures">
+  <rect width="512" height="512" fill="#0b2340"/>
+  <g transform="translate(160 140) scale(0.86)">
+    <path d="M0 40 A40 40 0 0 1 40 0 H162 L212 50 V296 A40 40 0 0 1 172 336 H40 A40 40 0 0 1 0 296 Z" fill="#ffffff" transform="translate(-25 -40)"/>
+    <path d="M162 0 L212 50 H162 Z" fill="#c9dcf2" transform="translate(-25 -40)"/>
+    <rect x="9" y="96" width="144" height="16" rx="8" fill="#c9dcf2"/>
+    <rect x="9" y="140" width="144" height="16" rx="8" fill="#c9dcf2"/>
+    <rect x="9" y="184" width="96" height="16" rx="8" fill="#c9dcf2"/>
+    <rect x="9" y="240" width="72" height="28" rx="14" fill="#1d6fd8"/>
+  </g>
+</svg>

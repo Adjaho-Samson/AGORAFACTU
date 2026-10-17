@@ -1,0 +1,80 @@
+/* ==========================================================================
+   Agora Factures — paramètres
+   ========================================================================== */
+
+.sections-parametres { max-width: 900px; }
+
+.sections-parametres .carte > header { background: var(--gris-clair); }
+
+.grille-2-parametres {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--e4);
+}
+
+.liste-actions { display: flex; flex-direction: column; gap: var(--e3); }
+.liste-actions .action {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--e2) var(--e3);
+  padding: var(--e3) 0;
+  border-bottom: 1px solid var(--gris);
+}
+@media (max-width: 520px) {
+  /* Le bouton passe sous le libellé et occupe toute la largeur disponible. */
+  .liste-actions .action > .btn,
+  .liste-actions .action > input[type="file"] { flex: 1 1 100%; max-width: 100%; }
+}
+.liste-actions .action:last-child { border-bottom: 0; }
+.liste-actions .action .texte { flex: 1 1 240px; }
+.liste-actions .action .texte strong { display: block; color: var(--bleu-fonce); }
+.liste-actions .action .texte span { font-size: .84rem; color: var(--texte-doux); }
+
+.a-propos dl {
+  display: grid;
+  grid-template-columns: minmax(140px, 220px) 1fr;
+  gap: var(--e2) var(--e4);
+  margin: 0;
+}
+.a-propos dt { font-weight: 700; color: var(--texte-doux); font-size: .88rem; }
+.a-propos dd { margin: 0; word-break: break-word; }
+@media (max-width: 560px) {
+  .a-propos dl { grid-template-columns: 1fr; gap: 2px var(--e3); }
+  .a-propos dd { margin-bottom: var(--e2); }
+}
+
+.modele-apercu {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--e3);
+}
+.modele-apercu .vignette {
+  border: 1px solid var(--bord);
+  border-radius: var(--rayon);
+  padding: var(--e3);
+  background: var(--gris-clair);
+}
+.modele-apercu .vignette strong { display: block; margin-bottom: 4px; }
+.modele-apercu .vignette .mini {
+  height: 70px;
+  border-radius: 6px;
+  background: #fff;
+  border: 1px solid var(--bord-fort);
+  margin-bottom: var(--e2);
+  overflow: hidden;
+  position: relative;
+}
+.modele-apercu .vignette .mini.classique::before {
+  content: ""; position: absolute; inset: 0 0 auto 0; height: 14px; background: var(--bleu-fonce);
+}
+.modele-apercu .vignette .mini.moderne::before {
+  content: ""; position: absolute; top: 8px; left: 8px; right: 40%; height: 10px; background: var(--bleu-clair); border-radius: 3px;
+}
+.modele-apercu .vignette .mini.minimal::before {
+  content: ""; position: absolute; top: 8px; left: 8px; right: 8px; height: 2px; background: #000;
+}
+.modele-apercu .vignette .mini::after {
+  content: ""; position: absolute; left: 8px; right: 8px; bottom: 8px; height: 18px;
+  background: repeating-linear-gradient(to bottom, #e3e8ef 0 3px, transparent 3px 6px);
+}

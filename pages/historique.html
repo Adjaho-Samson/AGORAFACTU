@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Historique — Agora Factures</title>
+<meta name="description" content="Rechercher, filtrer, trier et gérer les factures et reçus enregistrés.">
+<meta name="theme-color" content="#12375f">
+<link rel="manifest" href="../manifest.json">
+<link rel="icon" href="../assets/icons/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/icons/apple-touch-icon.png">
+<link rel="stylesheet" href="../css/global.css">
+<link rel="stylesheet" href="../css/document.css">
+<link rel="stylesheet" href="../css/print.css">
+<link rel="stylesheet" href="../css/historique.css">
+</head>
+<body data-page="historique">
+<a class="lien-evitement" href="#contenu">Aller au contenu</a>
+
+<header class="app-header">
+  <div class="barre">
+    <a class="marque" href="../index.html">
+      <img src="../assets/icons/icon-192.png" alt="" width="34" height="34">
+      <span class="marque-texte">Agora Factures<small>FACTURES &amp; REÇUS</small></span>
+    </a>
+    <div class="actions">
+      <span id="indicateur-connexion" class="indicateur-etat" title="État de la connexion">
+        <span class="puce"></span><span class="libelle-etat">En ligne</span>
+      </span>
+      <button id="bouton-installer" type="button" class="btn btn-secondaire btn-petit cache">Installer<span class="sr-only"> l'application Agora Factures sur cet appareil</span></button>
+    </div>
+  </div>
+  <nav class="app-nav" aria-label="Navigation principale">
+    <ul>
+      <li><a href="../index.html">Accueil</a></li>
+      <li><a href="dashboard.html">Tableau de bord</a></li>
+      <li><a href="facture.html">Nouveau document</a></li>
+      <li><a href="historique.html" aria-current="page">Historique</a></li>
+      <li><a href="parametres.html">Paramètres</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main class="conteneur" id="contenu">
+
+  <div class="entete-page">
+    <div class="titre">
+      <h1>Historique</h1>
+      <p class="sous-titre">Tous les documents enregistrés sur cet appareil, y compris les brouillons et les documents annulés.</p>
+    </div>
+    <div class="outils">
+      <button id="bouton-actualiser" type="button" class="btn btn-fantome">Actualiser</button>
+      <a class="btn btn-principal" href="facture.html?type=facture">Nouvelle facture</a>
+      <a class="btn btn-secondaire" href="facture.html?type=recu">Nouveau reçu</a>
+    </div>
+  </div>
+
+  <section class="carte">
+    <header>
+      <h2>Recherche et filtres</h2>
+      <div class="outils">
+        <button id="filtres-reinitialiser" type="button" class="btn btn-fantome btn-petit">Réinitialiser</button>
+      </div>
+    </header>
+    <div class="corps" id="filtres-historique">
+      <div class="filtres">
+        <div class="champ champ-recherche">
+          <label for="filtre-recherche">Recherche</label>
+          <span class="loupe"><svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></span>
+          <input type="search" id="filtre-recherche" placeholder="Numéro ou nom du client…">
+        </div>
+        <div class="champ">
+          <label for="filtre-type">Type</label>
+          <select id="filtre-type">
+            <option value="tout">Tous</option>
+            <option value="facture">Factures</option>
+            <option value="recu">Reçus</option>
+          </select>
+        </div>
+        <div class="champ">
+          <label for="filtre-statut">Statut</label>
+          <select id="filtre-statut">
+            <option value="tout">Tous</option>
+          </select>
+        </div>
+        <div class="champ">
+          <label for="filtre-periode">Période</label>
+          <select id="filtre-periode">
+            <option value="tout">Toutes</option>
+            <option value="aujourdhui">Aujourd'hui</option>
+            <option value="7j">7 derniers jours</option>
+            <option value="30j">30 derniers jours</option>
+            <option value="mois">Mois en cours</option>
+            <option value="trimestre">Trimestre en cours</option>
+            <option value="annee">Année en cours</option>
+            <option value="personnalise">Période personnalisée…</option>
+          </select>
+        </div>
+        <div class="champ cache">
+          <label for="filtre-du">Du</label>
+          <input type="date" id="filtre-du">
+        </div>
+        <div class="champ cache">
+          <label for="filtre-au">Au</label>
+          <input type="date" id="filtre-au">
+          <div class="erreur"></div>
+        </div>
+        <div class="champ">
+          <label for="filtre-tri">Trier par</label>
+          <select id="filtre-tri">
+            <option value="dateEmission">Date</option>
+            <option value="montant">Montant</option>
+            <option value="client">Client</option>
+            <option value="numero">Numéro</option>
+          </select>
+        </div>
+        <div class="champ">
+          <label for="filtre-sens">Ordre</label>
+          <select id="filtre-sens">
+            <option value="desc">Décroissant</option>
+            <option value="asc">Croissant</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div id="etat-vide-historique" class="carte cache">
+    <div class="etat-vide">
+      <div class="illustration">
+        <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6"/><path d="M9 17h4"/></svg>
+      </div>
+      <h3>Aucun document</h3>
+      <p>Aucun document ne correspond à ces critères. Créez une facture ou un reçu, ou élargissez votre recherche.</p>
+      <div class="groupe-boutons" style="justify-content:center">
+        <a class="btn btn-principal" href="facture.html?type=facture">Créer une facture</a>
+        <a class="btn btn-secondaire" href="facture.html?type=recu">Créer un reçu</a>
+      </div>
+    </div>
+  </div>
+
+  <section class="carte" id="conteneur-tableau">
+    <header>
+      <h2>Documents</h2>
+      <div class="outils"><span class="petit muet" id="resume-historique">0 document</span></div>
+    </header>
+    <div class="table-enveloppe">
+      <table class="tableau tableau-liste">
+        <thead>
+          <tr>
+            <th>Numéro</th>
+            <th>Type</th>
+            <th>Client</th>
+            <th>Date</th>
+            <th class="nombre">Montant</th>
+            <th>Statut</th>
+            <th class="actions">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="corps-historique"></tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<footer class="app-footer">
+  <div class="contenu">
+    <span>Agora Factures — données locales, sans serveur.</span>
+    <span class="petit">Seuls les brouillons et les documents annulés peuvent être supprimés.</span>
+  </div>
+</footer>
+
+<div id="zone-notifications" aria-live="polite" aria-atomic="false"></div>
+
+<script src="../js/app.js"></script>
+<script src="../js/calculs.js"></script>
+<script src="../js/stockage.js"></script>
+<script src="../js/parametres.js"></script>
+<script src="../js/documents.js"></script>
+<script src="../js/pdf.js"></script>
+<script src="../js/historique.js"></script>
+<script src="../js/pwa.js"></script>
+</body>
+</html>

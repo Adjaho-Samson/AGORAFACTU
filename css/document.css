@@ -1,0 +1,200 @@
+/* ==========================================================================
+   Agora Factures — rendu des documents (factures et reçus)
+   Trois modèles : classique, moderne, minimaliste.
+   Le même balisage sert à l'aperçu écran, à l'impression et au repère visuel
+   du PDF (les dimensions A4 sont respectées : 210 x 297 mm).
+   ========================================================================== */
+
+.zone-apercu {
+  background: #e7ebf1;
+  border: 1px solid var(--bord);
+  border-radius: var(--rayon-grand);
+  padding: var(--e4);
+  /* La feuille est mise à l'échelle par transformation : son débordement
+     horizontal n'est que « visuel » (la feuille occupe exactement la largeur
+     disponible). Le masquer évite une barre de défilement fantôme. */
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.apercu-echelle {
+  transform-origin: top left;
+  margin: 0 auto;
+}
+
+/* --------------------------------------------------------- document (A4) */
+.doc {
+  --doc-bleu: #12375f;
+  --doc-accent: #1d6fd8;
+  width: 210mm;
+  max-width: 100%;          /* jamais de débordement horizontal sur petit écran */
+  min-height: 297mm;
+  padding: 14mm;
+  background: #fff;
+  color: #16202c;
+  font-size: 10.5pt;
+  line-height: 1.45;
+  box-shadow: 0 6px 24px rgba(11, 35, 64, .18);
+  display: flex;
+  flex-direction: column;
+  gap: 6mm;
+}
+.doc.compact { min-height: 0; }           /* reçus courts */
+.doc.doc-recu { min-height: 0; }
+
+.doc * { box-sizing: border-box; }
+
+.doc-entete {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8mm;
+}
+.doc-vendeur { display: flex; gap: 4mm; align-items: flex-start; max-width: 58%; }
+.doc-logo { width: 26mm; max-height: 20mm; object-fit: contain; }
+.doc-vendeur-nom { font-weight: 700; font-size: 12pt; }
+.doc-vendeur-details { font-size: 9pt; color: #4a5566; white-space: pre-line; }
+
+.doc-titre-bloc { text-align: right; min-width: 42%; }
+.doc-titre { margin: 0 0 2mm; font-size: 20pt; letter-spacing: 1px; }
+.doc-numero { font-weight: 700; font-size: 11pt; }
+.doc-meta { font-size: 9pt; color: #4a5566; margin-top: 2mm; }
+.doc-meta .doc-statut { font-weight: 700; }
+
+.doc-parties { display: flex; gap: 8mm; }
+.doc-client { flex: 1 1 auto; border: 1px solid #d8dfe9; border-radius: 3mm; padding: 4mm; }
+.doc-client-titre {
+  font-size: 8pt; text-transform: uppercase; letter-spacing: 1px;
+  color: #6b7688; margin: 0 0 2mm;
+}
+.doc-client-nom { font-weight: 700; font-size: 11pt; }
+.doc-client-details { font-size: 9pt; color: #4a5566; white-space: pre-line; }
+
+.doc-lignes { width: 100%; border-collapse: collapse; font-size: 9.5pt; }
+.doc-lignes caption { text-align: left; font-weight: 700; margin-bottom: 2mm; }
+.doc-lignes thead th {
+  text-align: left;
+  padding: 2.4mm 2mm;
+  background: var(--doc-bleu);
+  color: #fff;
+  font-size: 8.5pt;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+.doc-lignes th.n, .doc-lignes td.n { text-align: right; font-variant-numeric: tabular-nums; }
+.doc-lignes th.c, .doc-lignes td.c { text-align: center; }
+.doc-lignes tbody td { padding: 2.4mm 2mm; border-bottom: 1px solid #e3e8ef; vertical-align: top; }
+.doc-lignes tbody tr:nth-child(even) { background: #fafcfe; }
+.doc-lignes .doc-ligne-vide td { text-align: center; color: #6b7688; padding: 6mm 2mm; }
+
+.doc-pied-doc { margin-top: auto; display: flex; gap: 8mm; align-items: flex-end; }
+.doc-totaux { margin-left: auto; width: 78mm; font-size: 10pt; }
+.doc-totaux table { width: 100%; border-collapse: collapse; }
+.doc-totaux td { padding: 1.6mm 2mm; }
+.doc-totaux td.libelle { color: #4a5566; }
+.doc-totaux td.n { text-align: right; font-variant-numeric: tabular-nums; }
+.doc-totaux tr.total td {
+  font-size: 12pt; font-weight: 700;
+  border-top: 1.5pt solid var(--doc-bleu);
+  padding-top: 2.4mm;
+}
+.doc-totaux tr.solde td { font-weight: 700; }
+.doc-totaux tr.remise td.n { color: #8a4b00; }
+
+.doc-notes { display: flex; gap: 8mm; font-size: 8.5pt; color: #4a5566; }
+.doc-notes > div { flex: 1 1 0; }
+.doc-notes h4 { margin: 0 0 1mm; font-size: 8.5pt; text-transform: uppercase; letter-spacing: .6px; color: #6b7688; }
+.doc-notes p { margin: 0; white-space: pre-line; }
+
+.doc-paiements { font-size: 9pt; }
+.doc-paiements h4 { margin: 0 0 2mm; font-size: 8.5pt; text-transform: uppercase; letter-spacing: .6px; color: #6b7688; }
+.doc-paiements table { width: 100%; border-collapse: collapse; }
+.doc-paiements td, .doc-paiements th { padding: 1.4mm 2mm; border-bottom: 1px solid #e3e8ef; text-align: left; }
+.doc-paiements th.n, .doc-paiements td.n { text-align: right; font-variant-numeric: tabular-nums; }
+
+.doc-signature { display: flex; justify-content: space-between; gap: 8mm; margin-top: 6mm; font-size: 9pt; }
+.doc-signature .bloc { flex: 1 1 0; }
+.doc-signature .trait { border-top: 1px solid #9aa5b5; margin-top: 12mm; padding-top: 1mm; color: #6b7688; font-size: 8.5pt; }
+
+.doc-mentions {
+  border-top: 1px solid #e3e8ef;
+  padding-top: 3mm;
+  font-size: 8pt;
+  color: #6b7688;
+  text-align: center;
+}
+.doc-filigrane { display: none; }
+
+/* --------------------------------------------------------- modèle moderne */
+.doc.modele-moderne { --doc-bleu: #1d6fd8; --doc-accent: #4f9cf9; }
+.doc.modele-moderne .doc-entete { border-bottom: 3pt solid var(--doc-accent); padding-bottom: 5mm; }
+.doc.modele-moderne .doc-titre { color: var(--doc-bleu); }
+.doc.modele-moderne .doc-client { border: 0; border-left: 3pt solid var(--doc-accent); border-radius: 0; padding: 1mm 0 1mm 4mm; background: none; }
+.doc.modele-moderne .doc-lignes thead th { background: #eaf2fd; color: var(--doc-bleu); border-bottom: 1.5pt solid var(--doc-accent); }
+.doc.modele-moderne .doc-lignes tbody td { border-bottom: 1px solid #eef2f8; }
+.doc.modele-moderne .doc-totaux tr.total td { border-top: 1.5pt solid var(--doc-accent); color: var(--doc-bleu); }
+.doc.modele-moderne .doc-mentions { text-align: left; }
+
+/* ------------------------------------------------------ modèle minimaliste */
+.doc.modele-minimal { --doc-bleu: #000000; --doc-accent: #000000; padding: 12mm; font-size: 10pt; gap: 4mm; }
+.doc.modele-minimal .doc-entete { border-bottom: 1px solid #000; padding-bottom: 3mm; }
+.doc.modele-minimal .doc-titre { font-size: 15pt; letter-spacing: 2px; color: #000; }
+.doc.modele-minimal .doc-logo { filter: grayscale(100%); width: 20mm; max-height: 14mm; }
+.doc.modele-minimal .doc-client { border: 0; padding: 0; }
+.doc.modele-minimal .doc-lignes thead th { background: #f2f2f2; color: #000; border-bottom: 1px solid #000; font-size: 8pt; }
+.doc.modele-minimal .doc-lignes tbody tr:nth-child(even) { background: none; }
+.doc.modele-minimal .doc-lignes tbody td { border-bottom: 1px dotted #b9b9b9; padding: 1.6mm 1mm; }
+.doc.modele-minimal .doc-totaux tr.total td { border-top: 1px solid #000; }
+.doc.modele-minimal .doc-mentions { color: #555; }
+.doc.modele-minimal .doc-signature .trait { border-top: 1px solid #888; }
+
+/* ------------------------------------------------------ document annulé */
+.doc.doc-annulee { position: relative; }
+.doc.doc-annulee .doc-filigrane {
+  display: block;
+  position: absolute;
+  inset: auto 0 40% 0;
+  text-align: center;
+  font-size: 42pt;
+  font-weight: 800;
+  letter-spacing: 6px;
+  color: rgba(198, 40, 40, .22);
+  transform: rotate(-14deg);
+  pointer-events: none;
+}
+
+/* ------------------------------------------------------- aperçu en boîte */
+.apercu-dialogue .modale { max-width: 900px; }
+.apercu-dialogue .corps-modale { background: #e7ebf1; }
+
+.barre-apercu {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--e2);
+  padding: var(--e2) var(--e4);
+  background: var(--gris-clair);
+  border-bottom: 1px solid var(--bord);
+}
+.barre-apercu .groupe { display: flex; align-items: center; gap: 6px; font-size: .85rem; color: var(--texte-doux); }
+
+@media (max-width: 640px) {
+  .zone-apercu { padding: var(--e2); border-radius: var(--rayon); }
+}
+
+@media (max-width: 520px) {
+  .apercu-dialogue .modale > footer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--e2);
+  }
+  .apercu-dialogue .modale > footer .btn-fantome {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ------------------------------------------------- impression du document */
+@media print {
+  .zone-apercu { background: none; border: 0; padding: 0; overflow: visible; }
+  .apercu-echelle { transform: none !important; }
+  .doc { box-shadow: none; width: auto; min-height: 0; padding: 0; font-size: 10pt; }
+}

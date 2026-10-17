@@ -1,0 +1,275 @@
+/* ==========================================================================
+   Agora Factures — éditeur de document
+   ========================================================================== */
+
+.editeur {
+  display: grid;
+  /* Deux colonnes seulement lorsque la place est réellement suffisante.
+     Avec un point de rupture à 1180 px, la colonne formulaire ne descend
+     jamais sous ~690 px : le tableau d'articles (560 px) ne défile donc
+     jamais horizontalement sur un écran d'ordinateur. */
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
+  gap: var(--e5);
+  align-items: start;
+}
+
+.colonne-formulaire,
+.colonne-apercu {
+  min-width: 0;
+}
+
+/* Vendeur et client côte à côte dès que la largeur le permet : les deux blocs
+   sont comparables, la lecture est plus rapide et le formulaire moins long.
+   En dessous de 664 px de largeur utile, ils se remettent l'un sous l'autre. */
+.grille-identites {
+  display: grid;
+  /* min(320px, 100 %) : jamais de débordement si le conteneur est plus étroit. */
+  grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+  gap: var(--e5);
+  align-items: start;
+  margin-bottom: var(--e5);
+}
+.grille-identites > .carte { margin-bottom: 0; }
+
+@media (max-width: 1180px) {
+  .editeur { grid-template-columns: 1fr; }
+  .colonne-apercu {
+    position: static;
+    max-height: none;
+    overflow-y: visible;
+  }
+  /* Colonne unique : les totaux remontent juste après les actions, avant
+     l'aperçu. Le commerçant voit le montant à payer sans descendre jusqu'au
+     bas de la page. */
+  .colonne-apercu { display: flex; flex-direction: column; }
+  .colonne-apercu .carte-totaux { order: -1; }
+}
+@media (max-width: 700px) {
+  /* Une seule colonne : les cartes conservent leur espacement propre. */
+  .grille-identites { grid-template-columns: 1fr; gap: 0; margin-bottom: 0; }
+  .grille-identites > .carte { margin-bottom: var(--e5); }
+}
+
+/* La colonne d'aperçu suit le défilement sous l'en-tête. La hauteur de
+   l'en-tête est mesurée en JavaScript (elle change avec le zoom et le
+   passage à la ligne) ; 112 px n'est qu'une valeur de repli. */
+.colonne-apercu {
+  position: sticky;
+  top: calc(var(--hauteur-entete, 112px) + var(--e2));
+  /* Une colonne collante plus haute que la fenêtre rendrait les totaux
+     inatteignables au défilement : elle devient donc défilante. */
+  max-height: calc(100vh - var(--hauteur-entete, 112px) - var(--e4));
+  overflow-y: auto;
+}
+
+/* -------------------------------------------------------------- type doc */
+.choix-type {
+  display: flex;
+  gap: var(--e2);
+  flex-wrap: wrap;
+}
+.choix-type .option {
+  flex: 1 1 min(160px, 100%);
+  min-width: 0;
+}
+.choix-type input { position: absolute; opacity: 0; width: 0; height: 0; }
+.choix-type label {
+  display: flex;
+  align-items: center;
+  gap: var(--e3);
+  padding: var(--e3) var(--e4);
+  border: 1.5px solid var(--bord-fort);
+  border-radius: var(--rayon);
+  background: var(--blanc);
+  cursor: pointer;
+  font-weight: 600;
+  min-height: 48px;
+  transition: background-color .15s ease, border-color .15s ease, box-shadow .15s ease;
+}
+.choix-type label .icone,
+.choix-type .icone {
+  width: 24px;
+  height: 24px;
+  flex: none;
+}
+.choix-type input:checked + label {
+  background: var(--bleu-pale);
+  border-color: var(--bleu);
+  color: var(--bleu-fonce);
+  box-shadow: inset 0 0 0 1px var(--bleu);
+}
+.choix-type input:focus-visible + label { outline: 3px solid var(--bleu-clair); outline-offset: 2px; }
+
+/* -------------------------------------------------------------- lignes */
+.table-lignes { width: 100%; min-width: 560px; border-collapse: collapse; font-size: .9rem; }
+/* Les champs numériques occupent une part fixe de la largeur disponible :
+   la désignation récupère tout le reste, quel que soit l'écran. */
+.table-lignes .col-quantite, .table-lignes .col-remise { width: 11%; }
+.table-lignes .col-prix { width: 16%; }
+.table-lignes .col-tva { width: 10%; }
+.table-lignes .col-montant-total { width: 16%; }
+.table-lignes input { width: 100%; min-width: 0; }
+.table-lignes th {
+  text-align: left;
+  padding: var(--e2) var(--e2);
+  background: var(--gris-clair);
+  color: var(--texte-doux);
+  font-size: .74rem;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  border-bottom: 1px solid var(--bord);
+}
+.table-lignes td { padding: var(--e2); border-bottom: 1px solid var(--gris); vertical-align: middle; }
+.table-lignes input[type="text"] { min-height: 38px; padding: 6px 8px; }
+.table-lignes .ligne-montant { font-weight: 700; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.table-lignes td:last-child { width: 56px; }
+.table-lignes .col-montant { text-align: right; }
+
+@media (max-width: 820px) {
+  .table-lignes { min-width: 0; }
+  .table-lignes, .table-lignes tbody, .table-lignes tr, .table-lignes td { display: block; width: 100%; }
+  .table-lignes thead { display: none; }
+  .table-lignes tr {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--e3);
+    align-items: start;
+    border: 1px solid var(--bord);
+    border-radius: var(--rayon);
+    margin-bottom: var(--e3);
+    padding: var(--e3);
+    background: var(--blanc);
+    box-shadow: var(--ombre);
+  }
+  .table-lignes td {
+    border: 0;
+    padding: 0;
+    width: 100% !important;
+  }
+  .table-lignes .col-quantite,
+  .table-lignes .col-prix,
+  .table-lignes .col-remise,
+  .table-lignes .col-tva,
+  .table-lignes .col-montant-total,
+  .table-lignes td:last-child {
+    width: 100% !important;
+  }
+  .table-lignes td[data-libelle="Désignation"] { grid-column: 1 / -1; }
+  .table-lignes td.col-montant-total { grid-column: 1 / -1; }
+  .table-lignes td:last-child { grid-column: 1 / -1; }
+  .table-lignes input {
+    width: 100% !important;
+    min-height: 42px;
+    padding: 8px 10px;
+  }
+  .table-lignes td::before {
+    content: attr(data-libelle);
+    display: block;
+    font-size: .75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    color: var(--texte-faible);
+    margin-bottom: 4px;
+    white-space: nowrap;
+  }
+  .table-lignes td:last-child::before { display: none; }
+  .table-lignes .ligne-montant {
+    font-size: 1.05rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--e2);
+    padding-top: var(--e2);
+    border-top: 1px dashed var(--bord);
+  }
+  /* Le bouton de suppression occupe toute la largeur : cible tactile nette. */
+  .table-lignes td:last-child .btn {
+    width: 100%;
+    min-height: 42px;
+    margin-top: var(--e1);
+  }
+}
+
+@media (max-width: 400px) {
+  .table-lignes tr { grid-template-columns: 1fr; }
+  .choix-type .option { flex: 1 1 100%; }
+}
+
+/* -------------------------------------------------------------- remise */
+/* Les deux contrôles d'une même ligne se partagent la place et passent à la
+   ligne si le champ est étroit (plus de « flex: 0 0 44 % » en dur). */
+.champ-ligne { flex-wrap: wrap; }
+.champ-ligne > select, .champ-ligne > input { flex: 1 1 104px; min-width: 0; }
+#remise-globale-type { flex: 0 1 116px; }
+
+/* -------------------------------------------------------------- résumé */
+.resume-totaux { display: flex; flex-direction: column; gap: 6px; }
+.ligne-resume {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--e3);
+  padding: 4px 0;
+  font-size: .92rem;
+}
+.ligne-resume .etiquette { color: var(--texte-doux); }
+.ligne-resume .valeur { font-weight: 600; font-variant-numeric: tabular-nums; }
+.ligne-resume.total {
+  border-top: 2px solid var(--bleu-fonce);
+  margin-top: var(--e2);
+  padding-top: var(--e2);
+  font-size: 1.1rem;
+}
+.ligne-resume.total .valeur { color: var(--bleu-fonce); font-size: 1.2rem; }
+.ligne-resume.solde .valeur { color: var(--orange-texte); }
+.ligne-resume.remise .valeur { color: var(--orange-texte); }
+
+/* -------------------------------------------------------------- aperçu */
+.carte-apercu > header { padding: var(--e3) var(--e4); }
+.barre-outils-apercu {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e2);
+  padding: var(--e3) var(--e4);
+  border-bottom: 1px solid var(--bord);
+  background: var(--gris-clair);
+}
+#zone-apercu { max-height: 70vh; }
+@media (max-width: 1100px) {
+  #zone-apercu { max-height: 60vh; }
+}
+@media (max-width: 640px) {
+  #zone-apercu { max-height: 52vh; }
+}
+
+/* -------------------------------------------------------------- logo */
+.bloc-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--e3);
+  flex-wrap: wrap;
+}
+.logo-apercu {
+  width: 96px;
+  height: 56px;
+  border: 1px dashed var(--bord-fort);
+  border-radius: var(--rayon);
+  display: grid;
+  place-items: center;
+  background: var(--gris-clair);
+  overflow: hidden;
+  padding: 4px;
+}
+.logo-apercu img { max-width: 100%; max-height: 100%; object-fit: contain; }
+
+/* -------------------------------------------------------------- divers */
+.actions-document {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e2);
+  padding: var(--e3) var(--e4);
+  border-top: 1px solid var(--bord);
+  background: var(--gris-clair);
+  border-radius: 0 0 var(--rayon-grand) var(--rayon-grand);
+}
+.mention-obligatoire { color: var(--rouge); }

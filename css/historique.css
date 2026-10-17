@@ -1,0 +1,120 @@
+/* ==========================================================================
+   Agora Factures — historique
+   ========================================================================== */
+
+.filtres {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: var(--e3);
+  align-items: end;
+}
+.filtres .champ { margin-bottom: 0; }
+/* « 1 / -1 » et non « span 2 » : sur une grille à une seule colonne (écrans
+   étroits), « span 2 » créait une colonne implicite et faisait déborder la
+   page horizontalement. */
+.filtres .champ-recherche { grid-column: 1 / -1; }
+
+.barre-outils-historique {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e2);
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--e3);
+}
+.barre-outils-historique .resume { font-size: .88rem; color: var(--texte-doux); }
+
+.champ-recherche { position: relative; }
+.champ-recherche input { padding-left: 36px; }
+.champ-recherche .loupe {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--texte-faible);
+  pointer-events: none;
+}
+.champ-recherche .loupe .icone { width: 18px; height: 18px; }
+
+/* Tableau : sur mobile, chaque ligne devient une fiche */
+@media (max-width: 820px) {
+  table.tableau-liste thead { display: none; }
+  table.tableau-liste, table.tableau-liste tbody,
+  table.tableau-liste tr, table.tableau-liste td { display: block; width: 100%; }
+  table.tableau-liste tr {
+    border: 1px solid var(--bord);
+    border-radius: var(--rayon);
+    margin-bottom: var(--e3);
+    padding: var(--e3);
+    background: var(--blanc);
+    box-shadow: var(--ombre);
+  }
+  table.tableau-liste td {
+    border: 0;
+    padding: 6px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--e2);
+    text-align: left !important;
+  }
+  table.tableau-liste td::before {
+    content: attr(data-libelle);
+    font-weight: 700;
+    font-size: .75rem;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    color: var(--texte-faible);
+    flex: 0 0 auto;
+    white-space: nowrap;
+    min-width: 75px;
+  }
+  table.tableau-liste td.actions {
+    display: block;
+    margin-top: var(--e2);
+    padding-top: var(--e2);
+    border-top: 1px solid var(--gris);
+  }
+  table.tableau-liste td.actions::before { display: none; }
+  table.tableau-liste td.actions .groupe-boutons {
+    justify-content: flex-start;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  /* Montant et statut mis en évidence dans la fiche mobile. */
+  table.tableau-liste td.nombre.montant { font-size: 1.05rem; font-weight: 700; }
+  table.tableau-liste td[data-libelle="Numéro"] { font-size: 1rem; }
+  table.tableau-liste td[data-libelle="Statut"] {
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+  table.tableau-liste td[data-libelle="Statut"]::before {
+    margin-right: auto;
+    padding-top: 2px;
+  }
+  table.tableau-liste td[data-libelle="Statut"] .pastille {
+    margin-left: auto;
+  }
+  table.tableau-liste td[data-libelle="Statut"] .petit.muet {
+    flex: 0 0 100%;
+    text-align: right;
+    margin-top: 2px;
+    font-size: .8rem;
+  }
+}
+
+/* Très petits écrans (≤ 400 px) : les boutons d'action se répartissent
+   sur deux rangs plutôt que de déborder. */
+@media (max-width: 400px) {
+  table.tableau-liste td.actions .groupe-boutons { gap: var(--e1); }
+  table.tableau-liste td.actions .groupe-boutons .btn { flex: 0 0 auto; }
+  table.tableau-liste td { gap: var(--e2); }
+  .filtres { gap: var(--e2); grid-template-columns: 1fr; }
+}
+
+.badge-type {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+}

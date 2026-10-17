@@ -1,0 +1,88 @@
+/* ==========================================================================
+   Agora Factures — feuille d'impression dédiée
+   Règles appliquées uniquement par le navigateur lors de window.print().
+   Objectif : n'imprimer QUE le document, sans aucun élément d'interface.
+   ========================================================================== */
+
+@page {
+  size: A4 portrait;
+  margin: 12mm;
+}
+
+@media print {
+  html, body {
+    background: #fff !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Masquage systématique de l'interface applicative */
+  .non-imprimable,
+  .app-header,
+  .app-nav,
+  .app-footer,
+  #zone-notifications,
+  .fond-modale,
+  .barre-apercu,
+  .outils,
+  .entete-page .outils,
+  .carte > header .outils,
+  .filtres,
+  button,
+  .btn,
+  input,
+  select,
+  textarea,
+  nav,
+  .actions-document { display: none !important; }
+
+  /* Conteneurs : on neutralise les contraintes d'écran */
+  main.conteneur,
+  .carte,
+  .carte > .corps {
+    display: block !important;
+    max-width: none !important;
+    width: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    background: none !important;
+    overflow: visible !important;
+  }
+
+  a { color: inherit !important; text-decoration: none !important; }
+
+  /* ------------------------------------------------------------------
+     Mode « impression d'un document » : le document est cloné dans
+     #zone-impression par le module d'impression (js/app.js).
+     On masque tout le reste de la page.
+     ------------------------------------------------------------------ */
+  body.mode-impression > *:not(#zone-impression) { display: none !important; }
+  body.mode-impression #zone-impression { display: block !important; }
+  body.mode-impression { display: block !important; }
+
+  #zone-impression { display: none; }
+  #zone-impression .doc {
+    box-shadow: none !important;
+    width: auto !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    font-size: 10pt;
+    gap: 5mm;
+  }
+
+  /* Le document ne doit pas être coupé n'importe comment */
+  .doc-lignes tr,
+  .doc-totaux tr,
+  .doc-paiements tr { page-break-inside: avoid; break-inside: avoid; }
+  .doc-entete, .doc-client, .doc-totaux { page-break-inside: avoid; break-inside: avoid; }
+  .doc-totaux { page-break-before: avoid; break-before: avoid; }
+  .doc-signature { page-break-inside: avoid; break-inside: avoid; }
+
+  /* Couleurs conservées à l'impression (fonds des en-têtes de tableau...) */
+  .doc, .doc * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  .doc-filigrane { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}

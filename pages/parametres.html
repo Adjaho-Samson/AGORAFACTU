@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Paramètres — Agora Factures</title>
+<meta name="description" content="Profil vendeur, devise, numérotation, TVA, modèle de document, sauvegarde et restauration des données.">
+<meta name="theme-color" content="#12375f">
+<link rel="manifest" href="../manifest.json">
+<link rel="icon" href="../assets/icons/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/icons/apple-touch-icon.png">
+<link rel="stylesheet" href="../css/global.css">
+<link rel="stylesheet" href="../css/document.css">
+<link rel="stylesheet" href="../css/print.css">
+<link rel="stylesheet" href="../css/parametres.css">
+</head>
+<body data-page="parametres">
+<a class="lien-evitement" href="#contenu">Aller au contenu</a>
+
+<header class="app-header">
+  <div class="barre">
+    <a class="marque" href="../index.html">
+      <img src="../assets/icons/icon-192.png" alt="" width="34" height="34">
+      <span class="marque-texte">Agora Factures<small>FACTURES &amp; REÇUS</small></span>
+    </a>
+    <div class="actions">
+      <span id="indicateur-connexion" class="indicateur-etat" title="État de la connexion">
+        <span class="puce"></span><span class="libelle-etat">En ligne</span>
+      </span>
+      <button id="bouton-installer" type="button" class="btn btn-secondaire btn-petit cache">Installer<span class="sr-only"> l'application Agora Factures sur cet appareil</span></button>
+    </div>
+  </div>
+  <nav class="app-nav" aria-label="Navigation principale">
+    <ul>
+      <li><a href="../index.html">Accueil</a></li>
+      <li><a href="dashboard.html">Tableau de bord</a></li>
+      <li><a href="facture.html">Nouveau document</a></li>
+      <li><a href="historique.html">Historique</a></li>
+      <li><a href="parametres.html" aria-current="page">Paramètres</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main class="conteneur" id="contenu">
+
+  <div class="entete-page">
+    <div class="titre">
+      <h1>Paramètres</h1>
+      <p class="sous-titre">Ces réglages sont conservés dans ce navigateur (localStorage). Le logo est stocké dans la base locale.</p>
+    </div>
+    <div class="outils">
+      <button id="parametres-reinitialiser" type="button" class="btn btn-fantome">Réinitialiser les paramètres</button>
+      <button type="submit" form="formulaire-parametres" class="btn btn-principal">Enregistrer les paramètres</button>
+    </div>
+  </div>
+
+  <form id="formulaire-parametres" class="sections-parametres" novalidate>
+
+    <!-- ==================================================== VENDEUR === -->
+    <section class="carte">
+      <header><h2>Profil vendeur</h2></header>
+      <div class="corps">
+        <div class="grille-champs">
+          <div class="champ">
+            <label for="v-nom">Nom ou raison sociale</label>
+            <input type="text" id="v-nom" maxlength="120" autocomplete="organization">
+            <div class="erreur"></div>
+          </div>
+          <div class="champ">
+            <label for="v-telephone">Téléphone</label>
+            <input type="tel" id="v-telephone" maxlength="40" autocomplete="tel">
+            <div class="erreur"></div>
+          </div>
+          <div class="champ">
+            <label for="v-email">E-mail</label>
+            <input type="email" id="v-email" maxlength="120" autocomplete="email">
+            <div class="erreur"></div>
+          </div>
+          <div class="champ">
+            <label for="v-fiscal">Identifiant fiscal <span class="facultatif">(facultatif)</span></label>
+            <input type="text" id="v-fiscal" maxlength="60">
+            <div class="erreur"></div>
+          </div>
+        </div>
+        <div class="champ">
+          <label for="v-adresse">Adresse</label>
+          <textarea id="v-adresse" rows="2" maxlength="400"></textarea>
+          <div class="erreur"></div>
+        </div>
+        <div class="champ">
+          <label for="logo-fichier">Logo</label>
+          <div class="bloc-logo">
+            <div class="logo-apercu" id="logo-apercu"><span class="petit muet">Aucun logo</span></div>
+            <input type="file" id="logo-fichier" accept="image/png,image/jpeg,image/webp,image/svg+xml" class="petit">
+            <button type="button" id="logo-supprimer" class="btn btn-fantome btn-petit">Supprimer le logo</button>
+          </div>
+          <div class="aide petit muet">Formats acceptés : PNG, JPEG, WEBP, SVG — 3 Mo maximum, redimensionné à 480 × 240 px.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================== DEVISE === -->
+    <section class="carte">
+      <header><h2>Devise et affichage</h2></header>
+      <div class="corps">
+        <div class="grille-champs">
+          <div class="champ">
+            <label for="devise">Devise par défaut</label>
+            <select id="devise"></select>
+            <div class="erreur"></div>
+          </div>
+          <div class="champ">
+            <label for="devise-personnalisee">Devise personnalisée <span class="facultatif">(facultatif)</span></label>
+            <input type="text" id="devise-personnalisee" maxlength="8" placeholder="XOF, EUR, USD…">
+            <div class="aide petit muet">Code de 3 lettres. Laissez vide pour utiliser la liste ci-dessus.</div>
+            <div class="erreur"></div>
+          </div>
+          <div class="champ">
+            <label for="decimales">Nombre de décimales</label>
+            <select id="decimales"></select>
+            <div class="erreur"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================ NUMÉROTATION === -->
+    <section class="carte">
+      <header><h2>Numérotation des documents</h2></header>
+      <div class="corps">
+        <div class="grille-champs">
+          <div class="champ">
+            <label for="num-prefixe-facture">Préfixe des factures</label>
+            <input type="text" id="num-prefixe-facture" maxlength="10">
+            <div class="erreur"></div>
+          </div>
+          <div class="champ">
+            <label for="num-prefixe-recu">Préfixe des reçus</label>
+            <input type="text" id="num-prefixe-recu" maxlength="10">
+            <div class="erreur"></div>
+          </div>
+          <div class="champ">
+            <label for="num-modele">Modèle de numéro</label>
+            <input type="text" id="num-modele" maxlength="60">
+            <div class="aide petit muet">Jetons : {PREFIX} {AAAA} {AA} {MM} {JJ} {TYPE} {SEQ} {SEQ4} {SEQ5}</div>
+            <div class="erreur"></div>
+          </div>
+          <div class="champ">
+            <label for="num-remise">Remise à zéro du compteur</label>
+            <select id="num-remise"></select>
+          </div>
+          <div class="champ">
+            <label for="num-depart">Premier numéro</label>
+            <input type="number" id="num-depart" min="0" max="999999" step="1">
+            <div class="erreur"></div>
+          </div>
+        </div>
+        <div class="alerte alerte-info">
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8v.1"/></svg>
+          <p>Prochains numéros : <strong id="num-apercu-facture">—</strong> (facture) et <strong id="num-apercu-recu">—</strong> (reçu).</p>
+        </div>
+        <div id="liste-compteurs"></div>
+      </div>
+    </section>
+
+    <!-- ========================================================= TVA === -->
+    <section class="carte">
+      <header><h2>TVA et remises</h2></header>
+      <div class="corps">
+        <div class="grille-champs">
+          <div class="champ">
+            <label class="case">
+              <input type="checkbox" id="tva-active">
+              <span>Activer la TVA par défaut</span>
+            </label>
+            <div class="aide petit muet">Aucun taux n'est imposé : vous restez libre de la configuration.</div>
+          </div>
+          <div class="champ">
+            <label for="tva-taux">Taux par défaut (%)</label>
+            <input type="text" inputmode="decimal" id="tva-taux">
+            <div class="erreur"></div>
+          </div>
+          <div class="champ">
+            <label for="tva-mode">Mode de saisie des prix</label>
+            <select id="tva-mode">
+              <option value="exclusive">Hors taxes (TVA en sus)</option>
+              <option value="inclusive">Toutes taxes comprises</option>
+            </select>
+          </div>
+          <div class="champ">
+            <label for="remise-mode">Remise par ligne</label>
+            <select id="remise-mode">
+              <option value="pourcent">Pourcentage (%)</option>
+              <option value="montant">Montant</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================================================== DOCUMENT === -->
+    <section class="carte">
+      <header><h2>Document et impression</h2></header>
+      <div class="corps">
+        <div class="champ">
+          <label for="doc-modele">Modèle par défaut</label>
+          <select id="doc-modele"></select>
+        </div>
+        <div class="modele-apercu espace-haut">
+          <div class="vignette"><div class="mini classique"></div><strong>Classique</strong><span class="petit muet">En-tête bleu, tableau bordé.</span></div>
+          <div class="vignette"><div class="mini moderne"></div><strong>Moderne</strong><span class="petit muet">Accent bleu clair, plus aéré.</span></div>
+          <div class="vignette"><div class="mini minimal"></div><strong>Minimaliste</strong><span class="petit muet">Noir et blanc, impression économique.</span></div>
+        </div>
+        <div class="grille-champs espace-haut">
+          <div class="champ">
+            <label for="doc-delai">Délai d'échéance par défaut (jours)</label>
+            <input type="number" id="doc-delai" min="0" max="365" step="1">
+            <div class="erreur"></div>
+          </div>
+        </div>
+        <div class="grille-champs">
+          <div class="champ">
+            <label for="doc-notes">Notes par défaut</label>
+            <textarea id="doc-notes" rows="2" maxlength="1000"></textarea>
+          </div>
+          <div class="champ">
+            <label for="doc-conditions">Conditions par défaut</label>
+            <textarea id="doc-conditions" rows="2" maxlength="1000"></textarea>
+          </div>
+        </div>
+        <div class="grille-champs">
+          <div class="champ">
+            <label class="case"><input type="checkbox" id="imp-logo"><span>Afficher le logo sur les documents</span></label>
+          </div>
+          <div class="champ">
+            <label class="case"><input type="checkbox" id="imp-couleur"><span>Imprimer en couleur</span></label>
+          </div>
+          <div class="champ">
+            <label class="case"><input type="checkbox" id="imp-signature"><span>Afficher un bloc de signatures</span></label>
+          </div>
+          <div class="champ">
+            <label class="case"><input type="checkbox" id="imp-lettres"><span>Écrire le montant en lettres</span></label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </form>
+
+  <!-- ==================================================== STOCKAGE === -->
+  <section class="carte sections-parametres">
+    <header><h2>Stockage et sauvegardes</h2></header>
+    <div class="corps">
+      <div class="grille-champs">
+        <div class="champ">
+          <label class="case"><input type="checkbox" id="stock-rappel"><span>Me rappeler d'exporter une sauvegarde</span></label>
+        </div>
+        <div class="champ">
+          <label for="stock-delai">Rappel après (jours)</label>
+          <input type="number" id="stock-delai" min="1" max="365" step="1">
+          <div class="erreur"></div>
+        </div>
+      </div>
+      <div class="grille-champs">
+        <div class="champ">
+          <label>Documents enregistrés</label>
+          <p class="gras" id="stock-documents">—</p>
+        </div>
+        <div class="champ">
+          <label>Espace utilisé</label>
+          <p class="gras" id="stock-espace">—</p>
+        </div>
+        <div class="champ">
+          <label>Dernière sauvegarde exportée</label>
+          <p class="gras" id="stock-derniere-sauvegarde">—</p>
+        </div>
+      </div>
+      <div class="liste-actions espace-haut">
+        <div class="action">
+          <div class="texte">
+            <strong>Exporter une sauvegarde</strong>
+            <span>Fichier JSON contenant tous les documents, les compteurs, le logo et les réglages.</span>
+          </div>
+          <button type="button" class="btn btn-principal" id="bouton-exporter">Exporter</button>
+        </div>
+        <div class="action">
+          <div class="texte">
+            <strong>Restaurer une sauvegarde</strong>
+            <span>Le fichier est vérifié avant import. Choisissez « Fusionner » ou « Remplacer ».</span>
+          </div>
+          <input type="file" id="fichier-import" accept="application/json,.json" class="petit" aria-label="Choisir un fichier de sauvegarde Agora Factures">
+        </div>
+        <div class="action">
+          <div class="texte">
+            <strong>Demander un stockage persistant</strong>
+            <span>Demande au navigateur de ne pas purger les données en cas d'espace disque faible.</span>
+          </div>
+          <button type="button" class="btn btn-secondaire" id="bouton-persistance">Demander</button>
+        </div>
+        <div class="action">
+          <div class="texte">
+            <strong>Effacer toutes les données locales</strong>
+            <span>Supprime documents, compteurs, logo et réglages. Irréversible.</span>
+          </div>
+          <button type="button" class="btn btn-danger" id="bouton-effacer">Tout effacer</button>
+        </div>
+      </div>
+      <div class="alerte alerte-avertissement espace-haut">
+        <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2 20h20z"/><path d="M12 9v5"/><path d="M12 17.2v.1"/></svg>
+        <p>Le stockage local n'est <strong>pas chiffré</strong> et peut être effacé par le navigateur. Exportez régulièrement une sauvegarde.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================== À PROPOS === -->
+  <section class="carte sections-parametres">
+    <header><h2>À propos</h2></header>
+    <div class="corps a-propos">
+      <dl>
+        <dt>Application</dt><dd>Agora Factures</dd>
+        <dt>Version</dt><dd id="a-propos-version">—</dd>
+        <dt>Technologies</dt><dd>HTML5, CSS3, JavaScript natif, IndexedDB, Service Worker</dd>
+        <dt>Données</dt><dd>Stockées localement dans ce navigateur — aucun envoi vers un serveur</dd>
+        <dt>PDF</dt><dd>jsPDF (bibliothèque locale, utilisée hors ligne)</dd>
+        <dt>Navigateur</dt><dd id="a-propos-navigateur" class="petit muet">—</dd>
+        <dt>Fonctionnement hors ligne</dt>
+        <dd>
+          <strong id="etat-pwa-texte" class="etat-pwa etat-verification">Vérification…</strong>
+          <span id="etat-pwa-detail" class="petit muet"></span>
+        </dd>
+        <dt>Installation</dt>
+        <dd>
+          <button type="button" class="btn btn-secondaire btn-petit" id="bouton-installer-bis">Installer<span class="sr-only"> l'application Agora Factures sur cet appareil</span></button>
+          <span id="installation-indisponible" class="petit muet cache"> — l'installation automatique n'est pas proposée par ce navigateur ; utilisez le menu « Ajouter à l'écran d'accueil ».</span>
+        </dd>
+      </dl>
+    </div>
+  </section>
+
+</main>
+
+<footer class="app-footer">
+  <div class="contenu">
+    <span>Agora Factures — application locale, sans serveur ni compte utilisateur.</span>
+    <span class="petit">Pensez à exporter une sauvegarde après chaque série de factures importante.</span>
+  </div>
+</footer>
+
+<div id="zone-notifications" aria-live="polite" aria-atomic="false"></div>
+
+<script src="../js/app.js"></script>
+<script src="../js/calculs.js"></script>
+<script src="../js/stockage.js"></script>
+<script src="../js/parametres.js"></script>
+<script src="../js/documents.js"></script>
+<script src="../js/pwa.js"></script>
+<script>
+  // Le bouton d'installation secondaire déclenche le même gestionnaire.
+  (function () {
+    var bis = document.getElementById('bouton-installer-bis');
+    var principal = document.getElementById('bouton-installer');
+    if (bis && principal) {
+      bis.addEventListener('click', function () { principal.click(); });
+      var observer = new MutationObserver(function () {
+        bis.classList.toggle('cache', principal.classList.contains('cache'));
+        bis.disabled = principal.classList.contains('cache');
+      });
+      observer.observe(principal, { attributes: true, attributeFilter: ['class'] });
+    }
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+{
+  "name": "agora-factures",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Application web progressive (PWA) de facturation et de gestion de reçus, 100 % locale : HTML5, CSS3, JavaScript natif, IndexedDB et Service Worker.",
+  "keywords": [
+    "facture",
+    "recu",
+    "pwa",
+    "indexeddb",
+    "service-worker",
+    "hors-ligne",
+    "XOF"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "test": "node tests/calculs.test.mjs && node tests/stockage.test.mjs && node tests/pdf.test.mjs && node tests/ressources.test.mjs && node tests/pages.test.mjs && node tests/apercu.test.mjs && node tests/sw.test.mjs && node tests/pwa.test.mjs && node tests/responsive.test.mjs && node tests/accessibilite.test.mjs",
+    "test:calculs": "node tests/calculs.test.mjs",
+    "test:ressources": "node tests/ressources.test.mjs",
+    "test:stockage": "node tests/stockage.test.mjs",
+    "icones": "python3 tools/generer-icones.py",
+    "serveur": "python3 tools/serveur-dev.py",
+    "test:pages": "node tests/pages.test.mjs",
+    "test:pdf": "node tests/pdf.test.mjs",
+    "test:sw": "node tests/sw.test.mjs",
+    "test:pwa": "node tests/pwa.test.mjs",
+    "test:responsive": "node tests/responsive.test.mjs",
+    "test:accessibilite": "node tests/accessibilite.test.mjs",
+    "test:apercu": "node tests/apercu.test.mjs"
+  },
+  "devDependencies": {
+    "fake-indexeddb": "^6.0.0",
+    "jsdom": "^24.1.3"
+  }
+}

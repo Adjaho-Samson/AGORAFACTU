@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tableau de bord — Agora Factures</title>
+<meta name="description" content="Chiffre d'affaires encaissé, impayés, retards et évolution de l'activité.">
+<meta name="theme-color" content="#12375f">
+<link rel="manifest" href="../manifest.json">
+<link rel="icon" href="../assets/icons/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/icons/apple-touch-icon.png">
+<link rel="stylesheet" href="../css/global.css">
+<link rel="stylesheet" href="../css/document.css">
+<link rel="stylesheet" href="../css/print.css">
+<link rel="stylesheet" href="../css/dashboard.css">
+</head>
+<body data-page="dashboard">
+<a class="lien-evitement" href="#contenu">Aller au contenu</a>
+
+<header class="app-header">
+  <div class="barre">
+    <a class="marque" href="../index.html">
+      <img src="../assets/icons/icon-192.png" alt="" width="34" height="34">
+      <span class="marque-texte">Agora Factures<small>FACTURES &amp; REÇUS</small></span>
+    </a>
+    <div class="actions">
+      <span id="indicateur-connexion" class="indicateur-etat" title="État de la connexion">
+        <span class="puce"></span><span class="libelle-etat">En ligne</span>
+      </span>
+      <button id="bouton-installer" type="button" class="btn btn-secondaire btn-petit cache">Installer<span class="sr-only"> l'application Agora Factures sur cet appareil</span></button>
+    </div>
+  </div>
+  <nav class="app-nav" aria-label="Navigation principale">
+    <ul>
+      <li><a href="../index.html">Accueil</a></li>
+      <li><a href="dashboard.html" aria-current="page">Tableau de bord</a></li>
+      <li><a href="facture.html">Nouveau document</a></li>
+      <li><a href="historique.html">Historique</a></li>
+      <li><a href="parametres.html">Paramètres</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main class="conteneur" id="contenu">
+
+  <div class="entete-page">
+    <div class="titre">
+      <h1>Tableau de bord</h1>
+      <p class="sous-titre">Statistiques calculées à partir des documents réellement enregistrés sur cet appareil.</p>
+    </div>
+    <div class="outils">
+      <label class="sr-only" for="periode-tableau-de-bord">Période analysée</label>
+      <select id="periode-tableau-de-bord">
+        <option value="7j">7 derniers jours</option>
+        <option value="30j" selected>30 derniers jours</option>
+        <option value="annee">12 derniers mois</option>
+        <option value="tout">Depuis le début</option>
+      </select>
+      <button id="bouton-actualiser-tableau-de-bord" type="button" class="btn btn-fantome">Actualiser</button>
+      <a class="btn btn-principal" href="facture.html?type=facture">Nouvelle facture</a>
+    </div>
+  </div>
+
+  <div id="etat-vide-tableau-de-bord" class="carte cache">
+    <div class="etat-vide">
+      <div class="illustration">
+        <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+      </div>
+      <h3>Aucune donnée pour le moment</h3>
+      <p>Créez votre première facture ou votre premier reçu : les indicateurs se rempliront automatiquement.</p>
+      <div class="groupe-boutons" style="justify-content:center">
+        <a class="btn btn-principal" href="facture.html?type=facture">Créer une facture</a>
+        <a class="btn btn-secondaire" href="facture.html?type=recu">Créer un reçu</a>
+        <a class="btn btn-fantome" href="parametres.html">Configurer le profil</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="contenu-tableau-de-bord">
+
+    <div class="grille-kpi">
+      <div class="carte-stat encaisse">
+        <span class="libelle">Chiffre d'affaires encaissé</span>
+        <span class="valeur" id="kpi-encaisse">—</span>
+        <span class="aide" id="kpi-periode-libelle">30 derniers jours</span>
+      </div>
+      <div class="carte-stat">
+        <span class="libelle">Montant facturé</span>
+        <span class="valeur" id="kpi-facture">—</span>
+        <span class="aide">hors documents annulés</span>
+      </div>
+      <div class="carte-stat reste">
+        <span class="libelle">Reste à encaisser</span>
+        <span class="valeur" id="kpi-reste">—</span>
+        <span class="aide">soldes non réglés</span>
+      </div>
+      <div class="carte-stat">
+        <span class="libelle">Documents</span>
+        <span class="valeur" id="kpi-documents">—</span>
+        <span class="aide">émis et brouillons</span>
+      </div>
+      <div class="carte-stat encaisse">
+        <span class="libelle">Payés</span>
+        <span class="valeur" id="kpi-payes">—</span>
+        <span class="aide">paiement complet</span>
+      </div>
+      <div class="carte-stat reste">
+        <span class="libelle">Impayés</span>
+        <span class="valeur" id="kpi-impayes">—</span>
+        <span class="aide">en attente, partiels et retards</span>
+      </div>
+      <div class="carte-stat retard">
+        <span class="libelle">En retard</span>
+        <span class="valeur" id="kpi-retard">—</span>
+        <span class="aide">échéance dépassée</span>
+      </div>
+      <div class="carte-stat annule">
+        <span class="libelle">Annulés</span>
+        <span class="valeur" id="kpi-annules">—</span>
+        <span class="aide">exclus des montants</span>
+      </div>
+    </div>
+
+    <div class="grille-graphiques">
+      <section class="carte">
+        <header>
+          <h2>Évolution des montants</h2>
+          <div class="outils">
+            <span class="petit muet">Facturé et encaissé sur la période</span>
+          </div>
+        </header>
+        <div class="corps">
+          <div id="zone-graphique"></div>
+        </div>
+      </section>
+
+      <section class="carte">
+        <header><h2>Répartition des statuts</h2></header>
+        <div class="corps">
+          <div id="zone-repartition"></div>
+          <p class="petit muet espace-haut">Brouillons en cours : <strong id="kpi-brouillons">0</strong> (non comptés dans les statuts).</p>
+        </div>
+      </section>
+    </div>
+
+    <section class="carte">
+      <header>
+        <h2>Derniers documents</h2>
+        <div class="outils">
+          <a class="btn btn-fantome btn-petit" href="historique.html">Voir tout l'historique</a>
+        </div>
+      </header>
+      <div class="table-enveloppe">
+        <table class="tableau">
+          <thead>
+            <tr>
+              <th>Numéro</th>
+              <th>Type</th>
+              <th>Client</th>
+              <th>Date</th>
+              <th class="nombre">Montant</th>
+              <th>Statut</th>
+              <th class="actions">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="corps-recents"></tbody>
+        </table>
+      </div>
+    </section>
+
+  </div>
+
+</main>
+
+<footer class="app-footer">
+  <div class="contenu">
+    <span>Agora Factures — données locales, sans serveur.</span>
+    <span class="petit">Les documents annulés sont exclus des montants encaissés et facturés.</span>
+  </div>
+</footer>
+
+<div id="zone-notifications" aria-live="polite" aria-atomic="false"></div>
+
+<script src="../js/app.js"></script>
+<script src="../js/calculs.js"></script>
+<script src="../js/stockage.js"></script>
+<script src="../js/parametres.js"></script>
+<script src="../js/documents.js"></script>
+<script src="../js/historique.js"></script>
+<script src="../js/dashboard.js"></script>
+<script src="../js/pwa.js"></script>
+</body>
+</html>

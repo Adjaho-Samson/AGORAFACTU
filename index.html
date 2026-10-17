@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Agora Factures — créer et gérer ses factures et reçus hors ligne</title>
+<meta name="description" content="Agora Factures : créez, gérez, imprimez et exportez en PDF vos factures et reçus. Application 100 % locale, installable, utilisable hors connexion.">
+<meta name="theme-color" content="#12375f">
+<meta name="color-scheme" content="light">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="assets/icons/favicon-32.png" sizes="32x32">
+<link rel="icon" href="assets/icons/favicon-16.png" sizes="16x16">
+<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+<link rel="stylesheet" href="css/global.css">
+<link rel="stylesheet" href="css/document.css">
+</head>
+<body data-page="accueil">
+<a class="lien-evitement" href="#contenu">Aller au contenu</a>
+
+<header class="app-header">
+  <div class="barre">
+    <a class="marque" href="index.html">
+      <img src="assets/icons/icon-192.png" alt="" width="34" height="34">
+      <span class="marque-texte">Agora Factures<small>FACTURES &amp; REÇUS</small></span>
+    </a>
+    <div class="actions">
+      <span id="indicateur-connexion" class="indicateur-etat" title="État de la connexion">
+        <span class="puce"></span><span class="libelle-etat">En ligne</span>
+      </span>
+      <button id="bouton-installer" type="button" class="btn btn-secondaire btn-petit cache">Installer<span class="sr-only"> l'application Agora Factures sur cet appareil</span></button>
+    </div>
+  </div>
+  <nav class="app-nav" aria-label="Navigation principale">
+    <ul>
+      <li><a href="index.html" aria-current="page">Accueil</a></li>
+      <li><a href="pages/dashboard.html">Tableau de bord</a></li>
+      <li><a href="pages/facture.html">Nouveau document</a></li>
+      <li><a href="pages/historique.html">Historique</a></li>
+      <li><a href="pages/parametres.html">Paramètres</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main class="conteneur" id="contenu">
+
+  <div id="alerte-sans-sw" class="alerte alerte-avertissement cache" role="status">
+    <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2 20h20z"/><path d="M12 9v5"/><path d="M12 17.2v.1"/></svg>
+    <p><strong>Fonctionnement hors ligne indisponible.</strong> Le Service Worker n'a pas pu être enregistré.
+      Servez l'application en HTTPS (ou depuis <code>localhost</code>) pour activer la mise en cache et l'installation.</p>
+  </div>
+
+  <div id="alerte-non-securise" class="alerte alerte-avertissement cache" role="status">
+    <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2 20h20z"/><path d="M12 9v5"/><path d="M12 17.2v.1"/></svg>
+    <p><strong>Contexte non sécurisé.</strong> Les fonctionnalités PWA (installation, cache hors ligne) nécessitent HTTPS.</p>
+  </div>
+
+  <section class="carte">
+    <div class="corps">
+      <div class="grille-2">
+        <div>
+          <h1>Factures et reçus, simplement.</h1>
+          <p class="muet">Agora Factures aide les commerçants, indépendants et petits prestataires à créer des
+            documents professionnels, suivre les paiements et exporter des PDF — sans compte, sans serveur,
+            et sans connexion après le premier chargement.</p>
+          <div class="groupe-boutons espace-haut">
+            <a class="btn btn-principal btn-large" href="pages/facture.html?type=facture">Créer une facture</a>
+            <a class="btn btn-secondaire btn-large" href="pages/facture.html?type=recu">Créer un reçu</a>
+          </div>
+          <p class="petit muet espace-haut">Vos documents restent sur votre appareil (IndexedDB). Aucune donnée n'est envoyée sur Internet.</p>
+        </div>
+        <div>
+          <div class="grille-3">
+            <a class="carte ombre-douce" href="pages/historique.html" style="margin:0">
+              <div class="corps serre">
+                <h3>Historique</h3>
+                <p class="petit muet" style="margin:0">Rechercher, filtrer, trier, dupliquer, annuler.</p>
+              </div>
+            </a>
+            <a class="carte ombre-douce" href="pages/dashboard.html" style="margin:0">
+              <div class="corps serre">
+                <h3>Tableau de bord</h3>
+                <p class="petit muet" style="margin:0">Encaissé, impayés, retards, évolution.</p>
+              </div>
+            </a>
+            <a class="carte ombre-douce" href="pages/parametres.html" style="margin:0">
+              <div class="corps serre">
+                <h3>Paramètres</h3>
+                <p class="petit muet" style="margin:0">Profil vendeur, TVA, numérotation, sauvegardes.</p>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="grille-2">
+    <div class="carte">
+      <header><h2>Ce que vous pouvez faire</h2></header>
+      <div class="corps">
+        <ul style="margin:0;padding-left:18px">
+          <li>Créer une <strong>facture</strong> ou un <strong>reçu</strong> avec numérotation automatique unique.</li>
+          <li>Calculer lignes, remises, TVA (activable et configurable) et totaux en temps réel.</li>
+          <li>Choisir parmi <strong>trois modèles</strong> : classique, moderne ou minimaliste.</li>
+          <li>Enregistrer des <strong>paiements</strong> (complets ou partiels) et suivre le solde restant.</li>
+          <li>Imprimer au format A4 ou <strong>exporter en PDF</strong>.</li>
+          <li>Rechercher et filtrer l'historique, modifier les brouillons, annuler un document émis.</li>
+          <li>Exporter et restaurer une <strong>sauvegarde</strong> locale complète.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="carte">
+      <header><h2>Confidentialité et stockage</h2></header>
+      <div class="corps">
+        <div class="alerte alerte-info">
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8v.1"/></svg>
+          <p>Tout est local : les documents sont conservés dans <strong>IndexedDB</strong>, les préférences dans
+            <strong>localStorage</strong>. Le stockage local n'est <strong>pas chiffré</strong> : utilisez un appareil
+            protégé et exportez régulièrement vos sauvegardes.</p>
+        </div>
+        <div class="alerte alerte-avertissement">
+          <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2 20h20z"/><path d="M12 9v5"/><path d="M12 17.2v.1"/></svg>
+          <p>Vider les données du navigateur ou désinstaller l'application <strong>efface définitivement</strong> vos
+            documents. La page <a href="pages/parametres.html">Paramètres</a> permet de créer un fichier de sauvegarde.</p>
+        </div>
+        <p class="petit muet">État de l'application : <strong id="etat-pwa-texte" class="etat-pwa etat-verification">Vérification du fonctionnement hors ligne…</strong></p>
+        <p class="petit muet" id="etat-pwa-detail"></p>
+        <p class="petit muet"><span class="cache-si-sw cache">mise en cache hors ligne active</span>
+          <span id="installation-indisponible" class="cache">l'installation automatique n'est pas proposée par ce navigateur (utilisez le menu « Ajouter à l'écran d'accueil »).</span></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="carte">
+    <header><h2>Par où commencer ?</h2></header>
+    <div class="corps">
+      <ol style="margin:0;padding-left:18px">
+        <li>Renseignez votre <strong>profil vendeur</strong> (nom, adresse, téléphone, logo, devise) dans les paramètres.</li>
+        <li>Ajustez la <strong>TVA</strong> et la <strong>numérotation</strong> si nécessaire : aucun taux n'est imposé.</li>
+        <li>Créez votre premier document : le numéro est attribué automatiquement à l'enregistrement.</li>
+        <li>Enregistrez les paiements au fil de l'eau : le statut et le solde se mettent à jour.</li>
+        <li>Exportez une sauvegarde de temps en temps, depuis les paramètres.</li>
+      </ol>
+    </div>
+  </section>
+
+</main>
+
+<footer class="app-footer">
+  <div class="contenu">
+    <span>Agora Factures — application locale, sans serveur ni compte utilisateur.</span>
+    <span class="petit">HTML5 · CSS3 · JavaScript · IndexedDB · Service Worker</span>
+  </div>
+</footer>
+
+<div id="zone-notifications" aria-live="polite" aria-atomic="false"></div>
+
+<script src="js/app.js"></script>
+<script src="js/calculs.js"></script>
+<script src="js/stockage.js"></script>
+<script src="js/parametres.js"></script>
+<script src="js/documents.js"></script>
+<script src="js/pwa.js"></script>
+</body>
+</html>

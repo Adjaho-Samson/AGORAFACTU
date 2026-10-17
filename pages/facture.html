@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nouveau document — Agora Factures</title>
+<meta name="description" content="Créer une facture ou un reçu : vendeur, client, articles, remises, TVA, aperçu en temps réel.">
+<meta name="theme-color" content="#12375f">
+<link rel="manifest" href="../manifest.json">
+<link rel="icon" href="../assets/icons/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/icons/apple-touch-icon.png">
+<link rel="stylesheet" href="../css/global.css">
+<link rel="stylesheet" href="../css/document.css">
+<link rel="stylesheet" href="../css/print.css">
+<link rel="stylesheet" href="../css/facture.css">
+</head>
+<body data-page="facture">
+<a class="lien-evitement" href="#contenu">Aller au contenu</a>
+
+<header class="app-header">
+  <div class="barre">
+    <a class="marque" href="../index.html">
+      <img src="../assets/icons/icon-192.png" alt="" width="34" height="34">
+      <span class="marque-texte">Agora Factures<small>FACTURES &amp; REÇUS</small></span>
+    </a>
+    <div class="actions">
+      <span id="indicateur-connexion" class="indicateur-etat" title="État de la connexion">
+        <span class="puce"></span><span class="libelle-etat">En ligne</span>
+      </span>
+      <button id="bouton-installer" type="button" class="btn btn-secondaire btn-petit cache">Installer<span class="sr-only"> l'application Agora Factures sur cet appareil</span></button>
+    </div>
+  </div>
+  <nav class="app-nav" aria-label="Navigation principale">
+    <ul>
+      <li><a href="../index.html">Accueil</a></li>
+      <li><a href="dashboard.html">Tableau de bord</a></li>
+      <li><a href="facture.html" aria-current="page">Nouveau document</a></li>
+      <li><a href="historique.html">Historique</a></li>
+      <li><a href="parametres.html">Paramètres</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main class="conteneur" id="contenu">
+
+  <div class="entete-page">
+    <div class="titre">
+      <h1 id="titre-page-editeur">Nouvelle facture</h1>
+      <p class="sous-titre">Les montants sont recalculés à chaque saisie. Rien n'est envoyé sur un serveur.</p>
+    </div>
+    <div class="outils">
+      <span id="bloc-statut" class="pastille pastille-gris">Brouillon</span>
+      <button id="bouton-nouveau" type="button" class="btn btn-fantome">Nouveau</button>
+    </div>
+  </div>
+
+  <div class="editeur">
+
+    <!-- ================================================== FORMULAIRE === -->
+    <div class="colonne-formulaire">
+
+      <section class="carte">
+        <header><h2>Type de document</h2></header>
+        <div class="corps">
+          <div class="choix-type">
+            <div class="option">
+              <input type="radio" name="type-document" id="type-facture" value="facture" checked>
+              <label for="type-facture">
+                <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>
+                Facture
+              </label>
+            </div>
+            <div class="option">
+              <input type="radio" name="type-document" id="type-recu" value="recu">
+              <label for="type-recu">
+                <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M2 10h20"/><path d="M6 15h4"/></svg>
+                Reçu
+              </label>
+            </div>
+          </div>
+          <p class="aide petit muet espace-haut">Un <strong>reçu</strong> correspond obligatoirement à un paiement enregistré : indiquez le montant reçu.</p>
+        </div>
+      </section>
+
+      <!-- ------------------------------- vendeur et client (2 colonnes) -->
+      <div class="grille-identites">
+
+      <!-- ------------------------------------------------------ vendeur -->
+      <section class="carte">
+        <header>
+          <h2>Vendeur</h2>
+          <div class="outils">
+            <button id="vendeur-restaurer" type="button" class="btn btn-fantome btn-petit">Reprendre mon profil</button>
+          </div>
+        </header>
+        <div class="corps">
+          <div class="grille-champs">
+            <div class="champ">
+              <label for="vendeur-nom">Nom ou raison sociale <span class="mention-obligatoire">*</span></label>
+              <input type="text" id="vendeur-nom" autocomplete="organization" maxlength="120">
+              <div class="erreur"></div>
+            </div>
+            <div class="champ">
+              <label for="vendeur-telephone">Téléphone</label>
+              <input type="tel" id="vendeur-telephone" autocomplete="tel" maxlength="40">
+              <div class="erreur"></div>
+            </div>
+            <div class="champ">
+              <label for="vendeur-email">E-mail <span class="facultatif">(facultatif)</span></label>
+              <input type="email" id="vendeur-email" autocomplete="email" maxlength="120">
+              <div class="erreur"></div>
+            </div>
+            <div class="champ">
+              <label for="vendeur-fiscal">Identifiant fiscal <span class="facultatif">(facultatif)</span></label>
+              <input type="text" id="vendeur-fiscal" maxlength="60" placeholder="IFU, NIF, RC…">
+              <div class="erreur"></div>
+            </div>
+          </div>
+          <div class="champ">
+            <label for="vendeur-adresse">Adresse</label>
+            <textarea id="vendeur-adresse" rows="2" maxlength="400"></textarea>
+            <div class="erreur"></div>
+          </div>
+          <div class="champ">
+            <label for="vendeur-logo">Logo <span class="facultatif">(facultatif, PNG/JPEG/SVG)</span></label>
+            <div class="bloc-logo">
+              <div class="logo-apercu" id="vendeur-logo-apercu"><span class="petit muet">Aucun logo</span></div>
+              <input type="file" id="vendeur-logo" accept="image/png,image/jpeg,image/webp,image/svg+xml" class="petit">
+              <button id="vendeur-logo-supprimer" type="button" class="btn btn-fantome btn-petit">Retirer le logo</button>
+            </div>
+            <div class="aide petit muet">Le logo est redimensionné localement puis conservé avec le document.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ------------------------------------------------------- client -->
+      <section class="carte">
+        <header><h2>Client</h2></header>
+        <div class="corps">
+          <div class="grille-champs">
+            <div class="champ">
+              <label for="client-nom">Nom ou raison sociale <span class="mention-obligatoire">*</span></label>
+              <input type="text" id="client-nom" autocomplete="organization" maxlength="120">
+              <div class="erreur"></div>
+            </div>
+            <div class="champ">
+              <label for="client-telephone">Téléphone <span class="facultatif">(facultatif)</span></label>
+              <input type="tel" id="client-telephone" maxlength="40">
+              <div class="erreur"></div>
+            </div>
+            <div class="champ">
+              <label for="client-email">E-mail <span class="facultatif">(facultatif)</span></label>
+              <input type="email" id="client-email" maxlength="120">
+              <div class="erreur"></div>
+            </div>
+            <div class="champ">
+              <label for="client-adresse">Adresse <span class="facultatif">(facultatif)</span></label>
+              <input type="text" id="client-adresse" maxlength="200">
+              <div class="erreur"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      </div><!-- /.grille-identites -->
+
+      <!-- ----------------------------------------------------- document -->
+      <section class="carte">
+        <header><h2>Document</h2></header>
+        <div class="corps">
+          <div class="grille-champs">
+            <div class="champ">
+              <label for="doc-numero">Numéro</label>
+              <input type="text" id="doc-numero" readonly aria-readonly="true" aria-describedby="aide-numero">
+              <div class="aide" id="aide-numero">Attribué automatiquement à l'enregistrement — jamais réattribué.</div>
+              <div class="erreur"></div>
+            </div>
+            <div class="champ">
+              <label for="doc-date">Date d'émission <span class="mention-obligatoire">*</span></label>
+              <input type="date" id="doc-date">
+              <div class="erreur"></div>
+            </div>
+            <div class="champ" id="champ-echeance">
+              <label for="doc-echeance">Échéance <span class="facultatif">(facultatif)</span></label>
+              <input type="date" id="doc-echeance">
+              <div class="erreur"></div>
+            </div>
+            <div class="champ">
+              <label for="doc-devise">Devise</label>
+              <select id="doc-devise"></select>
+              <div class="erreur"></div>
+            </div>
+            <div class="champ">
+              <label for="doc-modele">Modèle d'aperçu</label>
+              <select id="doc-modele"></select>
+              <div class="erreur"></div>
+            </div>
+          </div>
+
+          <hr>
+
+          <div class="grille-champs">
+            <div class="champ">
+              <label class="case">
+                <input type="checkbox" id="tva-active" checked>
+                <span>Appliquer la TVA</span>
+              </label>
+              <div class="aide petit muet">Désactivez pour les régimes non assujettis.</div>
+            </div>
+            <div class="champ">
+              <label for="tva-mode">Mode de TVA</label>
+              <select id="tva-mode">
+                <option value="exclusive">Prix saisis HT (TVA en sus)</option>
+                <option value="inclusive">Prix saisis TTC (TVA incluse)</option>
+              </select>
+            </div>
+            <div class="champ">
+              <label for="remise-mode">Remise par ligne</label>
+              <select id="remise-mode">
+                <option value="pourcent">En pourcentage (%)</option>
+                <option value="montant">En montant</option>
+              </select>
+            </div>
+            <div class="champ">
+              <label for="remise-globale-type">Remise globale</label>
+              <div class="champ-ligne">
+                <select id="remise-globale-type">
+                  <option value="pourcent">%</option>
+                  <option value="montant">Montant</option>
+                </select>
+                <input type="text" inputmode="decimal" id="remise-globale-valeur" placeholder="0" aria-label="Valeur de la remise globale">
+              </div>
+              <div class="erreur"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ------------------------------------------------------- lignes -->
+      <section class="carte">
+        <header>
+          <h2>Articles et services</h2>
+          <div class="outils">
+            <button id="ajouter-ligne" type="button" class="btn btn-secondaire btn-petit">Ajouter une ligne</button>
+          </div>
+        </header>
+        <div class="table-enveloppe">
+          <table class="table-lignes">
+            <thead>
+              <tr>
+                <th>Désignation</th>
+                <th class="col-montant">Quantité</th>
+                <th class="col-montant">Prix unitaire</th>
+                <th class="col-montant" id="entete-remise">Remise</th>
+                <th class="col-montant" id="entete-tva">TVA %</th>
+                <th class="col-montant">Montant</th>
+                <th><span class="sr-only">Actions</span></th>
+              </tr>
+            </thead>
+            <tbody id="corps-lignes"></tbody>
+          </table>
+        </div>
+        <div class="actions-document">
+          <span class="petit muet">Les montants sont arrondis au centime le plus proche (règle half-up) puis additionnés.</span>
+        </div>
+      </section>
+
+      <!-- ----------------------------------------------------- paiement -->
+      <section class="carte" id="bloc-paiement">
+        <header><h2>Paiement</h2></header>
+        <div class="corps">
+          <div class="champ si-facture">
+            <label class="case">
+              <input type="checkbox" id="paiement-actif">
+              <span>Enregistrer un paiement maintenant</span>
+            </label>
+            <div class="aide petit muet">Facultatif pour une facture. Vous pourrez aussi l'ajouter plus tard depuis l'historique.</div>
+          </div>
+          <p class="petit si-recu">Un reçu atteste d'un paiement : le montant reçu est obligatoire.</p>
+          <div class="alerte alerte-info cache" id="note-paiements-multiples" role="status">
+            <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8v.1"/></svg>
+            <p>Ce document comporte <strong id="nb-paiements">2</strong> paiements enregistrés
+              (total <strong id="total-paiements">—</strong>). Ils sont conservés tels quels :
+              ajoutez ou retirez un règlement depuis le bouton « Enregistrer un paiement »,
+              en bas de page.</p>
+          </div>
+          <div class="grille-champs">
+            <div class="champ">
+              <label for="paiement-montant" id="label-paiement-montant">Montant reçu</label>
+              <input type="text" inputmode="decimal" id="paiement-montant" placeholder="0">
+              <div class="erreur"></div>
+            </div>
+            <div class="champ">
+              <label for="paiement-date">Date du paiement</label>
+              <input type="date" id="paiement-date">
+              <div class="erreur"></div>
+            </div>
+            <div class="champ">
+              <label for="paiement-methode">Moyen de paiement</label>
+              <select id="paiement-methode"></select>
+            </div>
+            <div class="champ">
+              <label for="paiement-reference">Référence <span class="facultatif">(facultatif)</span></label>
+              <input type="text" id="paiement-reference" maxlength="60">
+              <div class="erreur"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ----------------------------------------- notes et conditions -->
+      <section class="carte">
+        <header><h2>Notes et conditions</h2></header>
+        <div class="corps">
+          <div class="grille-champs">
+            <div class="champ">
+              <label for="doc-notes">Notes <span class="facultatif">(facultatif)</span></label>
+              <textarea id="doc-notes" rows="3" maxlength="1000" placeholder="Merci de votre confiance…"></textarea>
+            </div>
+            <div class="champ">
+              <label for="doc-conditions">Conditions <span class="facultatif">(facultatif)</span></label>
+              <textarea id="doc-conditions" rows="3" maxlength="1000" placeholder="Paiement à réception, aucun retour après 7 jours…"></textarea>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ------------------------------------------------------- actions -->
+      <section class="carte">
+        <header><h2>Actions</h2></header>
+        <div class="corps">
+          <div class="groupe-boutons">
+            <button id="bouton-brouillon" type="button" class="btn btn-secondaire">Enregistrer comme brouillon</button>
+            <button id="bouton-enregistrer" type="button" class="btn btn-principal">Enregistrer le document</button>
+          </div>
+          <div class="groupe-boutons espace-haut">
+            <button id="bouton-apercu" type="button" class="btn btn-fantome">Prévisualiser</button>
+            <button id="bouton-imprimer" type="button" class="btn btn-fantome">Imprimer</button>
+            <button id="bouton-pdf" type="button" class="btn btn-fantome">Télécharger en PDF</button>
+          </div>
+          <div class="groupe-boutons espace-haut cache" id="actions-statut">
+            <button id="bouton-paiement" type="button" class="btn btn-succes" data-action="payer">Enregistrer un paiement</button>
+            <button id="bouton-marquer-payee" type="button" class="btn btn-succes" data-action="payer">Marquer comme payée</button>
+            <button id="bouton-annuler" type="button" class="btn btn-danger" data-action="annuler">Annuler le document</button>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ===================================================== APERÇU === -->
+    <aside class="colonne-apercu">
+      <section class="carte carte-apercu">
+        <header>
+          <h2>Aperçu</h2>
+          <div class="outils">
+            <button id="bouton-apercu-grand" type="button" class="btn btn-fantome btn-petit">Agrandir</button>
+          </div>
+        </header>
+        <div class="barre-outils-apercu non-imprimable">
+          <button id="bouton-imprimer-2" type="button" class="btn btn-petit btn-secondaire">Imprimer</button>
+          <button id="bouton-pdf-2" type="button" class="btn btn-petit btn-bleu">PDF</button>
+        </div>
+        <div class="corps serre">
+          <div id="zone-apercu" class="zone-apercu" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <section class="carte carte-totaux">
+        <header><h2>Totaux</h2></header>
+        <div class="corps serre">
+          <div class="resume-totaux">
+            <div class="ligne-resume"><span class="etiquette">Sous-total</span><span class="valeur" id="resume-sous-total">—</span></div>
+            <div class="ligne-resume remise"><span class="etiquette">Remises</span><span class="valeur" id="resume-remises">—</span></div>
+            <div class="ligne-resume"><span class="etiquette" id="libelle-base">Base imposable</span><span class="valeur" id="resume-base">—</span></div>
+            <div class="ligne-resume"><span class="etiquette">TVA</span><span class="valeur" id="resume-tva">—</span></div>
+            <div id="resume-tva-detail"></div>
+            <div class="ligne-resume total"><span class="etiquette">Total</span><span class="valeur" id="resume-total">—</span></div>
+            <div class="ligne-resume"><span class="etiquette">Déjà payé</span><span class="valeur" id="resume-paye">—</span></div>
+            <div class="ligne-resume solde"><span class="etiquette">Reste à payer</span><span class="valeur" id="resume-solde">—</span></div>
+          </div>
+        </div>
+      </section>
+    </aside>
+
+  </div>
+
+</main>
+
+<footer class="app-footer">
+  <div class="contenu">
+    <span>Agora Factures — données locales, sans serveur.</span>
+    <span class="petit">Astuce : « Imprimer » ouvre la boîte d'impression du navigateur, qui permet aussi d'enregistrer en PDF.</span>
+  </div>
+</footer>
+
+<div id="zone-notifications" aria-live="polite" aria-atomic="false"></div>
+
+<script src="../js/app.js"></script>
+<script src="../js/calculs.js"></script>
+<script src="../js/stockage.js"></script>
+<script src="../js/parametres.js"></script>
+<script src="../js/documents.js"></script>
+<script src="../js/pdf.js"></script>
+<script src="../js/factures.js"></script>
+<script src="../js/pwa.js"></script>
+<script>
+  // Boutons dupliqués de la colonne aperçu
+  (function () {
+    var grand = document.getElementById('bouton-apercu-grand');
+    var imprimer2 = document.getElementById('bouton-imprimer-2');
+    var pdf2 = document.getElementById('bouton-pdf-2');
+    if (grand) grand.addEventListener('click', function () {
+      document.getElementById('bouton-apercu').click();
+    });
+    if (imprimer2) imprimer2.addEventListener('click', function () {
+      document.getElementById('bouton-imprimer').click();
+    });
+    if (pdf2) pdf2.addEventListener('click', function () {
+      document.getElementById('bouton-pdf').click();
+    });
+  })();
+</script>
+</body>
+</html>

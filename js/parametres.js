@@ -13,7 +13,7 @@
   var app = AGORA.app;
   var doc = global.document;
 
-  var VERSION_APP = '1.0.0';
+  var VERSION_APP = '1.2.0';
 
   var MODELES = [
     { code: 'classique', libelle: 'Classique', description: 'En-tête bleu, tableau bordé, idéal pour un rendu institutionnel.' },
@@ -335,7 +335,19 @@
     /* ------------------------------------------------------ numérotation */
     $('#num-prefixe-facture').value = reglages.numerotation.prefixeFacture;
     $('#num-prefixe-recu').value = reglages.numerotation.prefixeRecu;
-    $('#num-modele').value = reglages.numerotation.modele;
+    var selectFormatNumero = $('#num-modele');
+    /* Conserve un éventuel format créé avec une version précédente sans
+       réexposer sa syntaxe interne dans les réglages courants. */
+    var formatConnu = Array.prototype.some.call(selectFormatNumero.options, function (option) {
+      return option.value === reglages.numerotation.modele;
+    });
+    if (!formatConnu) {
+      selectFormatNumero.appendChild(app.creer('option', {
+        value: reglages.numerotation.modele,
+        text: 'Format actuel personnalisé'
+      }));
+    }
+    selectFormatNumero.value = reglages.numerotation.modele;
     var selectRemise = $('#num-remise');
     MODES_REMISE_A_ZERO.forEach(function (o) {
       selectRemise.appendChild(app.creer('option', { value: o.code, text: o.libelle }));
@@ -442,9 +454,8 @@
       $('#stock-derniere-sauvegarde').textContent = derniere ? AGORA.calculs.formaterDateHeure(derniere) : 'jamais';
     }
 
-    /* ------------------------------------------------------------ à propos */
-    $('#a-propos-version').textContent = VERSION_APP;
-    $('#a-propos-navigateur').textContent = global.navigator ? String(global.navigator.userAgent).slice(0, 120) : '—';
+    /* La version reste disponible dans les fichiers de sauvegarde pour le
+       diagnostic, sans encombrer les informations destinées à l'utilisateur. */
 
     /* --------------------------------------------------------- enregistrement */
     formulaire.addEventListener('submit', function (e) {
@@ -544,7 +555,7 @@
         erreurs.push({ champ: '#devise', message: 'La devise doit être un code de 3 lettres (ex. XOF).' });
       }
       if (r.numerotation.modele.indexOf('{SEQ') === -1) {
-        erreurs.push({ champ: '#num-modele', message: 'Le modèle doit contenir {SEQ} ou {SEQ4}.' });
+        erreurs.push({ champ: '#num-modele', message: 'Choisissez un format de numérotation valide.' });
       }
       if (r.tva.active && !(r.tva.tauxDefaut >= 0 && r.tva.tauxDefaut <= 100)) {
         erreurs.push({ champ: '#tva-taux', message: 'Le taux de TVA doit être compris entre 0 et 100.' });
@@ -573,7 +584,7 @@
         try {
           donnees = JSON.parse(contenu);
         } catch (err) {
-          throw new Error('Le fichier n\'est pas un JSON valide.');
+          throw new Error('Cette sauvegarde n\'est pas lisible. Choisissez un fichier exporté depuis Agora Factures.');
         }
         if (!donnees || !Array.isArray(donnees.documents)) {
           throw new Error('Le fichier ne contient pas de documents Agora Factures.');
@@ -624,7 +635,7 @@
     $('#bouton-effacer').addEventListener('click', function () {
       var corps = app.creer('div');
       corps.appendChild(app.creer('p', {
-        text: 'Cette action supprime définitivement TOUS les documents, les compteurs de numérotation, le logo et les préférences enregistrés dans ce navigateur.'
+        text: 'Cette action supprime définitivement TOUS les documents, la numérotation, le logo et les réglages enregistrés sur cet appareil.'
       }));
       corps.appendChild(app.creer('p', { class: 'petit', text: 'Cette opération est irréversible. Exportez d\'abord une sauvegarde si vous souhaitez conserver vos données.' }));
       var saisie = app.creer('input', { type: 'text', id: 'confirmation-effacement', placeholder: 'EFFACER', autocomplete: 'off' });
@@ -657,8 +668,8 @@
 
     $('#bouton-persistance').addEventListener('click', function () {
       AGORA.stockage.demanderPersistance().then(function (ok) {
-        if (ok) app.notifier('Stockage persistant accordé par le navigateur.', 'succes');
-        else app.notifier('Le navigateur a refusé ou ne gère pas le stockage persistant. Exportez régulièrement vos sauvegardes.', 'avertissement', 6000);
+        if (ok) app.notifier('La protection des données est activée sur cet appareil.', 'succes');
+        else app.notifier('La protection ne peut pas être activée sur cet appareil. Exportez régulièrement vos sauvegardes.', 'avertissement', 6000);
       });
     });
 

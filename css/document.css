@@ -23,8 +23,8 @@
 
 /* --------------------------------------------------------- document (A4) */
 .doc {
-  --doc-bleu: #12375f;
-  --doc-accent: #1d6fd8;
+  --doc-bleu: #12372f;
+  --doc-accent: #0f766e;
   width: 210mm;
   max-width: 100%;          /* jamais de débordement horizontal sur petit écran */
   min-height: 297mm;
@@ -125,11 +125,11 @@
 .doc-filigrane { display: none; }
 
 /* --------------------------------------------------------- modèle moderne */
-.doc.modele-moderne { --doc-bleu: #1d6fd8; --doc-accent: #4f9cf9; }
+.doc.modele-moderne { --doc-bleu: #0f766e; --doc-accent: #34b98a; }
 .doc.modele-moderne .doc-entete { border-bottom: 3pt solid var(--doc-accent); padding-bottom: 5mm; }
 .doc.modele-moderne .doc-titre { color: var(--doc-bleu); }
 .doc.modele-moderne .doc-client { border: 0; border-left: 3pt solid var(--doc-accent); border-radius: 0; padding: 1mm 0 1mm 4mm; background: none; }
-.doc.modele-moderne .doc-lignes thead th { background: #eaf2fd; color: var(--doc-bleu); border-bottom: 1.5pt solid var(--doc-accent); }
+.doc.modele-moderne .doc-lignes thead th { background: #e8f5f1; color: var(--doc-bleu); border-bottom: 1.5pt solid var(--doc-accent); }
 .doc.modele-moderne .doc-lignes tbody td { border-bottom: 1px solid #eef2f8; }
 .doc.modele-moderne .doc-totaux tr.total td { border-top: 1.5pt solid var(--doc-accent); color: var(--doc-bleu); }
 .doc.modele-moderne .doc-mentions { text-align: left; }

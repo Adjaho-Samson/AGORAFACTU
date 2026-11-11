@@ -536,6 +536,26 @@
 
   function surveillerEntete() {
     if (!doc || typeof doc.querySelector !== 'function') return;
+
+    /* Icônes de navigation et d'action : elles renforcent le repérage sans
+       remplacer les libellés, qui restent toujours disponibles. */
+    $$('.app-nav a[data-icone]').forEach(function (lien) {
+      if (!lien.querySelector('.icone')) lien.insertAdjacentHTML('afterbegin', icone(lien.dataset.icone));
+    });
+    var actions = {
+      'bouton-enregistrer': 'check', 'bouton-brouillon': 'sauvegarde',
+      'bouton-apercu': 'voir', 'bouton-imprimer': 'imprimante',
+      'bouton-pdf': 'telecharger', 'ajouter-ligne': 'plus',
+      'bouton-exporter': 'sauvegarde', 'bouton-actualiser': 'historique',
+      'bouton-actualiser-tableau-de-bord': 'historique',
+      'bouton-paiement': 'paiement', 'bouton-nouveau': 'plus',
+      'filtres-basculer': 'filtre'
+    };
+    Object.keys(actions).forEach(function (id) {
+      var bouton = doc.getElementById(id);
+      if (bouton && !bouton.querySelector('.icone')) bouton.insertAdjacentHTML('afterbegin', icone(actions[id]));
+    });
+
     mesurerEntete();
     var lienActif = doc.querySelector('.app-nav [aria-current="page"]');
     if (lienActif && typeof lienActif.scrollIntoView === 'function') {

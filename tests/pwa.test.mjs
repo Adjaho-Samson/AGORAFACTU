@@ -45,7 +45,7 @@ async function chargerIndex(options = {}) {
   Object.defineProperty(window, 'caches', {
     configurable: true,
     value: {
-      keys: () => Promise.resolve(['agora-factures-v1.1.0-app']),
+      keys: () => Promise.resolve(['agora-factures-v1.2.0-app']),
       open: (nom) => Promise.resolve({
         keys: () => Promise.resolve(
           new Array(options.ressources === undefined ? 27 : options.ressources).fill(0).map((_, i) => ({ url: 'r' + i }))
@@ -103,9 +103,11 @@ decrire('État PWA annoncé à l\'utilisateur', () => {
     egal(etat.code, 'actif');
     egal(etat.raison, '');
     vrai(etat.ressourcesEnCache >= 1, 'nombre de ressources en cache non mesuré');
-    egal(doc.querySelector('#etat-pwa-texte').textContent, 'Prêt hors ligne');
-    vrai(doc.querySelector('#etat-pwa-detail').textContent.includes('ressource(s) en cache'),
-      'le détail doit indiquer le nombre de ressources réellement en cache');
+    egal(doc.querySelector('#etat-pwa-texte').textContent, 'Disponible hors connexion');
+    vrai(doc.querySelector('#etat-pwa-detail').textContent.includes('même sans connexion'),
+      'le détail doit expliquer le bénéfice concret pour l\'utilisateur');
+    vrai(!doc.querySelector('#etat-pwa-detail').textContent.includes('ressource(s) en cache'),
+      'le nombre de ressources est un détail interne, pas une information utilisateur');
     vrai(doc.querySelector('.cache-si-sw') && visible(doc.querySelector('.cache-si-sw')),
       'l\'indicateur de cache doit être visible');
     faux(visible(doc.querySelector('#alerte-sans-sw')), 'aucune alerte ne doit s\'afficher');
@@ -121,10 +123,12 @@ decrire('État PWA annoncé à l\'utilisateur', () => {
     const etat = window.AGORA.pwa.etat();
     egal(etat.code, 'indisponible');
     egal(etat.raison, 'navigateur');
-    egal(doc.querySelector('#etat-pwa-texte').textContent, 'Hors ligne non disponible');
+    egal(doc.querySelector('#etat-pwa-texte').textContent, 'Hors connexion indisponible');
     vrai(visible(doc.querySelector('#alerte-sans-sw')), 'l\'alerte doit être affichée');
-    vrai(doc.querySelector('#alerte-sans-sw').textContent.includes('Service Workers'),
-      'la raison « navigateur » doit être explicite');
+    vrai(doc.querySelector('#alerte-sans-sw').textContent.includes('Cet appareil'),
+      'le message doit expliquer la situation en langage courant');
+    vrai(!/Service Worker|HTTPS|localhost/.test(doc.querySelector('#alerte-sans-sw').textContent),
+      'aucun détail d\'implémentation ne doit être affiché');
     faux(visible(doc.querySelector('.cache-si-sw')), 'le cache ne doit jamais être annoncé actif');
   });
 
@@ -136,14 +140,16 @@ decrire('État PWA annoncé à l\'utilisateur', () => {
     faux(etat.contexteSecurise, 'le contexte doit être détecté comme non sécurisé');
     egal(appels.length, 0, 'aucun enregistrement ne doit être tenté en HTTP');
     vrai(visible(doc.querySelector('#alerte-non-securise')), 'l\'alerte de contexte doit être affichée');
-    vrai(doc.querySelector('#alerte-non-securise').textContent.includes('http://app.local'),
-      'l\'adresse réelle doit être rappelée');
+    vrai(doc.querySelector('#alerte-non-securise').textContent.includes('adresse sécurisée'),
+      'le message doit indiquer l\'action utile à effectuer');
+    faux(doc.querySelector('#alerte-non-securise').textContent.includes('http://app.local'),
+      'l\'adresse et le protocole sont des détails techniques inutiles');
     // Un seul message d'erreur, pas deux messages contradictoires.
     faux(visible(doc.querySelector('#alerte-sans-sw')), 'pas d\'alerte redondante sur l\'absence de Service Worker');
     egal(erreurs.length, 0, 'erreurs JS : ' + erreurs.join(' | '));
   });
 
-  test('échec d\'enregistrement : le message technique est affiché', async () => {
+  test('échec d\'enregistrement : conséquence et action utiles, sans erreur brute', async () => {
     const { window, document: doc } = await chargerIndex({
       enregistrer: () => Promise.reject(new Error('Erreur réseau simulée'))
     });
@@ -152,8 +158,10 @@ decrire('État PWA annoncé à l\'utilisateur', () => {
     egal(etat.raison, 'erreur');
     vrai(etat.detail.includes('Erreur réseau simulée'), 'détail attendu : ' + etat.detail);
     vrai(visible(doc.querySelector('#alerte-sans-sw')), 'l\'alerte doit être affichée');
-    vrai(doc.querySelector('#alerte-sans-sw').textContent.includes('Erreur réseau simulée'),
-      'le message d\'origine doit être visible (jamais masqué)');
+    vrai(doc.querySelector('#alerte-sans-sw').textContent.includes('Rechargez la page'),
+      'une action simple doit être proposée');
+    faux(doc.querySelector('#alerte-sans-sw').textContent.includes('Erreur réseau simulée'),
+      'l\'erreur brute reste disponible dans l\'état interne, pas dans l\'interface');
     faux(visible(doc.querySelector('.cache-si-sw')), 'le cache ne doit pas être annoncé actif');
   });
 

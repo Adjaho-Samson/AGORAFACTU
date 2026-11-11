@@ -10,7 +10,7 @@ import { readFileSync } from 'node:fs';
 import { resolve, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { JSDOM } from 'jsdom';
-import { decrire, test, egal, vrai, bilan } from './micro-test.mjs';
+import { decrire, test, egal, vrai, faux, bilan } from './micro-test.mjs';
 
 const RACINE = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const lire = (chemin) => readFileSync(join(RACINE, chemin), 'utf8');
@@ -232,6 +232,17 @@ decrire('Libellés des champs et des boutons', () => {
     vrai(/role:\s*'dialog'/.test(source), 'role=dialog absent');
     vrai(/_focusPrecedent/.test(source), 'le focus précédent doit être restauré');
     vrai(/inert/.test(source), 'l\'arrière-plan doit être rendu inerte');
+  });
+});
+
+decrire('Langage utile aux utilisateurs', () => {
+  test('aucun jargon d\'implémentation n\'est visible dans les pages', () => {
+    const interdits = /IndexedDB|localStorage|Service Worker|HTML5|CSS3|JavaScript natif|jsPDF|Jetons|half-up|Détails techniques|stockage persistant/i;
+    PAGES.forEach((page) => {
+      const htmlSansScripts = lire(page).replace(/<script\b[\s\S]*?<\/script>/gi, '');
+      const texteVisible = new JSDOM(htmlSansScripts).window.document.body.textContent;
+      faux(interdits.test(texteVisible), page + ' contient un terme technique dans son contenu visible');
+    });
   });
 });
 

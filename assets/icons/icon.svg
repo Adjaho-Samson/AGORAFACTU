@@ -1,18 +1,31 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="Agora Factures">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-labelledby="titre description">
+  <title id="titre">Agora Factures</title>
+  <desc id="description">Une facture accompagnée d'une coche de paiement confirmé</desc>
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#12375f"/>
-      <stop offset="1" stop-color="#0b2340"/>
+    <linearGradient id="fond" x1="56" y1="32" x2="456" y2="480" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#176c5b"/>
+      <stop offset="1" stop-color="#0b2822"/>
     </linearGradient>
+    <linearGradient id="coche" x1="282" y1="288" x2="398" y2="420" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#4ade9f"/>
+      <stop offset="1" stop-color="#16a875"/>
+    </linearGradient>
+    <filter id="ombre" x="-30%" y="-30%" width="160%" height="170%">
+      <feDropShadow dx="0" dy="14" stdDeviation="14" flood-color="#06231d" flood-opacity=".22"/>
+    </filter>
   </defs>
-  <rect width="512" height="512" rx="96" ry="96" fill="url(#bg)"/>
-  <!-- document -->
-  <g transform="translate(150 108)">
-    <path d="M0 40 A40 40 0 0 1 40 0 H162 L212 50 V296 A40 40 0 0 1 172 336 H40 A40 40 0 0 1 0 296 Z" fill="#ffffff"/>
-    <path d="M162 0 L212 50 H162 Z" fill="#c9dcf2"/>
-    <rect x="34" y="96" width="144" height="16" rx="8" fill="#c9dcf2"/>
-    <rect x="34" y="140" width="144" height="16" rx="8" fill="#c9dcf2"/>
-    <rect x="34" y="184" width="96" height="16" rx="8" fill="#c9dcf2"/>
-    <rect x="34" y="240" width="72" height="28" rx="14" fill="#1d6fd8"/>
+  <rect width="512" height="512" rx="104" fill="url(#fond)"/>
+  <circle cx="438" cy="68" r="112" fill="#8de3c5" opacity=".06"/>
+  <g filter="url(#ombre)">
+    <path d="M132 112a36 36 0 0 1 36-36h120l70 70v254a36 36 0 0 1-36 36H168a36 36 0 0 1-36-36V112Z" fill="#fff"/>
+    <path d="M288 76v44a26 26 0 0 0 26 26h44l-70-70Z" fill="#cdebe0"/>
+    <rect x="170" y="166" width="126" height="17" rx="8.5" fill="#c9ddd6"/>
+    <rect x="170" y="211" width="150" height="17" rx="8.5" fill="#c9ddd6"/>
+    <rect x="170" y="256" width="102" height="17" rx="8.5" fill="#c9ddd6"/>
+    <rect x="170" y="322" width="86" height="31" rx="15.5" fill="#176c5b"/>
+    <rect x="170" y="374" width="62" height="12" rx="6" fill="#dce9e4"/>
   </g>
+  <circle cx="350" cy="350" r="79" fill="#0b2822" opacity=".16"/>
+  <circle cx="350" cy="342" r="74" fill="url(#coche)" stroke="#fff" stroke-width="10"/>
+  <path d="m316 342 23 23 46-50" fill="none" stroke="#fff" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

@@ -13,11 +13,13 @@ import struct
 import zlib
 
 # ---------------------------------------------------------------- palette
-BG_A = (18, 55, 95)      # #12375f
-BG_B = (11, 35, 64)      # #0b2340
+BG_A = (23, 108, 91)     # #176c5b
+BG_B = (11, 40, 34)      # #0b2822
 PAPER = (255, 255, 255)
-FOLD = (201, 220, 242)   # #c9dcf2
-ACCENT = (29, 111, 216)  # #1d6fd8
+FOLD = (205, 235, 224)   # #cdebe0
+LINES = (201, 221, 214)  # #c9ddd6
+ACCENT = (22, 168, 117)  # #16a875
+BRAND = (23, 108, 91)    # #176c5b
 
 
 def clamp(v, lo=0.0, hi=1.0):
@@ -89,6 +91,38 @@ def make_rect(x, y, w, h, r):
     return cov, bbox
 
 
+def make_circle(cx, cy, radius):
+    bbox = (cx - radius - 1.0, cy - radius - 1.0,
+            cx + radius + 1.0, cy + radius + 1.0)
+
+    def cov(px, py):
+        if px < bbox[0] or py < bbox[1] or px > bbox[2] or py > bbox[3]:
+            return 0.0
+        distance = ((px - cx) ** 2 + (py - cy) ** 2) ** 0.5
+        return clamp(radius + 0.5 - distance)
+
+    return cov, bbox
+
+
+def make_segment(x1, y1, x2, y2, width):
+    """Capsule utilisée pour dessiner la coche, y compris aux petites tailles."""
+    dx, dy = x2 - x1, y2 - y1
+    length2 = dx * dx + dy * dy or 1.0
+    radius = width / 2.0
+    bbox = (min(x1, x2) - radius - 1.0, min(y1, y2) - radius - 1.0,
+            max(x1, x2) + radius + 1.0, max(y1, y2) + radius + 1.0)
+
+    def cov(px, py):
+        if px < bbox[0] or py < bbox[1] or px > bbox[2] or py > bbox[3]:
+            return 0.0
+        t = clamp(((px - x1) * dx + (py - y1) * dy) / length2)
+        near_x, near_y = x1 + t * dx, y1 + t * dy
+        distance = ((px - near_x) ** 2 + (py - near_y) ** 2) ** 0.5
+        return clamp(radius + 0.5 - distance)
+
+    return cov, bbox
+
+
 def make_gradient(size):
     k = 1.0 / (2.0 * size)
 
@@ -104,8 +138,8 @@ def make_gradient(size):
 def render(size, maskable=False, ss=3):
     """Rend une icône carrée de `size` pixels (RGBA)."""
     scale = size / 512.0
-    content_scale = 0.66 if maskable else 1.0
-    radius = 0.0 if maskable else 96 * scale
+    content_scale = 0.68 if maskable else 1.0
+    radius = 0.0 if maskable else 104 * scale
 
     def S(v):
         # coordonnée espace 512 -> espace image (zone de sécurité PWA si maskable)
@@ -122,13 +156,19 @@ def render(size, maskable=False, ss=3):
 
     # calques (du fond vers le premier plan)
     layers = []
-    layers.append((make_triangle((S(316), S(106)), (S(366), S(106)), (S(366), S(156))), grad))
-    layers.append((make_rect(S(146), S(106), S(220), S(300), S(36)), lambda px, py: PAPER))
-    layers.append((make_triangle((S(316), S(106)), (S(366), S(156)), (S(316), S(156))), lambda px, py: FOLD))
-    layers.append((make_rect(S(180), S(176), S(148), S(16), S(8)), lambda px, py: FOLD))
-    layers.append((make_rect(S(180), S(220), S(148), S(16), S(8)), lambda px, py: FOLD))
-    layers.append((make_rect(S(180), S(264), S(100), S(16), S(8)), lambda px, py: FOLD))
-    layers.append((make_rect(S(180), S(322), S(76), S(30), S(15)), lambda px, py: ACCENT))
+    # La feuille représente la facture ; la coche représente le règlement
+    # suivi dans l'application. Les deux restent lisibles dès 16 pixels.
+    layers.append((make_rect(S(132), S(76), S(226), S(360), S(36)), lambda px, py: PAPER))
+    layers.append((make_triangle((S(288), S(76)), (S(358), S(146)), (S(288), S(146))), lambda px, py: FOLD))
+    layers.append((make_rect(S(170), S(166), S(126), S(17), S(8.5)), lambda px, py: LINES))
+    layers.append((make_rect(S(170), S(211), S(150), S(17), S(8.5)), lambda px, py: LINES))
+    layers.append((make_rect(S(170), S(256), S(102), S(17), S(8.5)), lambda px, py: LINES))
+    layers.append((make_rect(S(170), S(322), S(86), S(31), S(15.5)), lambda px, py: BRAND))
+    layers.append((make_rect(S(170), S(374), S(62), S(12), S(6)), lambda px, py: LINES))
+    layers.append((make_circle(S(350), S(342), S(79)), lambda px, py: PAPER))
+    layers.append((make_circle(S(350), S(342), S(69)), lambda px, py: ACCENT))
+    layers.append((make_segment(S(316), S(342), S(339), S(365), S(17)), lambda px, py: PAPER))
+    layers.append((make_segment(S(339), S(365), S(385), S(315), S(17)), lambda px, py: PAPER))
 
     acc = [[0.0, 0.0, 0.0, 0.0] for _ in range(size * size)]
     n = size * ss
@@ -152,8 +192,8 @@ def render(size, maskable=False, ss=3):
                 g = cg * c + g * (1 - c)
                 b = cb * c + b * (1 - c)
                 a = c + a * (1 - c)
-                if a >= 1.0:
-                    break
+                # Ne pas interrompre la boucle : même lorsque le fond est
+                # opaque, les lignes et la coche doivent se superposer.
             cell = acc[row + sx // ss]
             cell[0] += r
             cell[1] += g

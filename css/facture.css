@@ -273,3 +273,49 @@
   border-radius: 0 0 var(--rayon-grand) var(--rayon-grand);
 }
 .mention-obligatoire { color: var(--rouge); }
+
+/* La saisie reste visuellement prioritaire ; les actions secondaires sont
+   regroupées sans multiplier les blocs concurrents. */
+.colonne-formulaire > .carte:last-child { border-color: var(--bleu-bord); }
+.colonne-formulaire > .carte:last-child > header { background: var(--bleu-pale); }
+.carte-totaux { border-color: var(--bleu-bord); }
+.carte-totaux .corps { background: #fbfdfc; border-radius: 0 0 var(--rayon-grand) var(--rayon-grand); }
+.ligne-resume { align-items: flex-start; }
+.ligne-resume .valeur { text-align: right; overflow-wrap: anywhere; }
+#doc-numero { font-weight: 700; letter-spacing: .015em; }
+#ajouter-ligne { white-space: nowrap; }
+
+@media (max-width: 640px) {
+  .colonne-apercu .carte-totaux .corps { padding: var(--e4); }
+  .actions-document { padding: var(--e3); }
+  .bloc-logo { align-items: flex-start; }
+  .bloc-logo input[type="file"] { width: 100%; }
+}
+
+/* Les deux décisions d'enregistrement restent accessibles pendant la saisie
+   sur téléphone, sans imposer un second bandeau sur ordinateur. */
+.actions-mobile-rapides { display: none; }
+@media (max-width: 700px) {
+  body[data-page="facture"] { padding-bottom: calc(142px + env(safe-area-inset-bottom, 0px)); }
+  .actions-mobile-rapides {
+    position: fixed;
+    z-index: 65;
+    inset: auto 0 calc(64px + env(safe-area-inset-bottom, 0px));
+    display: flex;
+    gap: var(--e3);
+    padding: var(--e3) var(--e4);
+    border-top: 1px solid var(--bord);
+    background: rgba(255, 255, 255, .98);
+    box-shadow: 0 -5px 18px rgba(18, 55, 47, .06);
+    backdrop-filter: blur(12px);
+  }
+  .actions-mobile-rapides .btn { flex: 1 1 0; min-height: 46px; }
+  body[data-page="facture"] #zone-notifications { bottom: calc(142px + env(safe-area-inset-bottom, 0px)); }
+}
+@media (orientation: landscape) and (max-height: 480px) and (max-width: 900px) {
+  .actions-mobile-rapides { position: static; margin: 0 var(--e3) var(--e4); border: 0; box-shadow: none; }
+  body[data-page="facture"] { padding-bottom: var(--e4); }
+}
+@media print {
+  .actions-mobile-rapides { display: none !important; }
+}

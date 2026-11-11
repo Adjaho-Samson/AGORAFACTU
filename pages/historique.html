@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Historique — Agora Factures</title>
 <meta name="description" content="Rechercher, filtrer, trier et gérer les factures et reçus enregistrés.">
-<meta name="theme-color" content="#12375f">
+<meta name="theme-color" content="#12372f">
 <link rel="manifest" href="../manifest.json">
 <link rel="icon" href="../assets/icons/favicon-32.png" sizes="32x32">
 <link rel="apple-touch-icon" href="../assets/icons/apple-touch-icon.png">
@@ -19,8 +19,8 @@
 
 <header class="app-header">
   <div class="barre">
-    <a class="marque" href="../index.html">
-      <img src="../assets/icons/icon-192.png" alt="" width="34" height="34">
+    <a class="marque" href="../index.html" aria-label="Agora Factures — Accueil">
+      <img src="../assets/icons/icon-192.png" alt="" width="40" height="40">
       <span class="marque-texte">Agora Factures<small>FACTURES &amp; REÇUS</small></span>
     </a>
     <div class="actions">
@@ -32,11 +32,11 @@
   </div>
   <nav class="app-nav" aria-label="Navigation principale">
     <ul>
-      <li><a href="../index.html">Accueil</a></li>
-      <li><a href="dashboard.html">Tableau de bord</a></li>
-      <li><a href="facture.html">Nouveau document</a></li>
-      <li><a href="historique.html" aria-current="page">Historique</a></li>
-      <li><a href="parametres.html">Paramètres</a></li>
+      <li><a href="../index.html" data-icone="accueil"><span class="nav-libelle nav-libelle-unique">Accueil</span></a></li>
+      <li><a href="dashboard.html" data-icone="tableau"><span class="nav-libelle">Tableau de bord</span><span class="nav-libelle-court">Suivi</span></a></li>
+      <li><a href="facture.html" data-icone="plus"><span class="nav-libelle">Nouveau document</span><span class="nav-libelle-court">Créer</span></a></li>
+      <li><a href="historique.html" aria-current="page" data-icone="historique"><span class="nav-libelle">Historique</span><span class="nav-libelle-court">Documents</span></a></li>
+      <li><a href="parametres.html" data-icone="parametres"><span class="nav-libelle">Paramètres</span><span class="nav-libelle-court">Réglages</span></a></li>
     </ul>
   </nav>
 </header>
@@ -46,7 +46,7 @@
   <div class="entete-page">
     <div class="titre">
       <h1>Historique</h1>
-      <p class="sous-titre">Tous les documents enregistrés sur cet appareil, y compris les brouillons et les documents annulés.</p>
+      <p class="sous-titre">Recherchez une facture ou un reçu, consultez son statut et gérez vos documents.</p>
     </div>
     <div class="outils">
       <button id="bouton-actualiser" type="button" class="btn btn-fantome">Actualiser</button>
@@ -59,6 +59,7 @@
     <header>
       <h2>Recherche et filtres</h2>
       <div class="outils">
+        <button id="filtres-basculer" type="button" class="btn btn-secondaire btn-petit cache" aria-controls="filtres-historique" aria-expanded="false"><span>Filtres</span></button>
         <button id="filtres-reinitialiser" type="button" class="btn btn-fantome btn-petit">Réinitialiser</button>
       </div>
     </header>
@@ -166,7 +167,7 @@
 
 <footer class="app-footer">
   <div class="contenu">
-    <span>Agora Factures — données locales, sans serveur.</span>
+    <span>Agora Factures — Vos documents restent sur cet appareil.</span>
     <span class="petit">Seuls les brouillons et les documents annulés peuvent être supprimés.</span>
   </div>
 </footer>

@@ -23,7 +23,7 @@
 /* global self, caches, fetch, clients */
 
 /* ⚠ À incrémenter à chaque déploiement modifiant un fichier de l'app shell. */
-var VERSION = 'agora-factures-v1.1.0';
+var VERSION = 'agora-factures-v1.2.0';
 var CACHE_APP = VERSION + '-app';
 var CACHE_DYNAMIQUE = VERSION + '-donnees';
 var PREFIXE_CACHE = 'agora-factures-';
@@ -42,6 +42,7 @@ var RESSOURCES = [
   'pages/historique.html',
   'pages/parametres.html',
   'css/global.css',
+  'css/accueil.css',
   'css/document.css',
   'css/print.css',
   'css/dashboard.css',
@@ -107,14 +108,14 @@ function pageHorsLigne() {
     return new Response(
       '<!doctype html><html lang="fr"><meta charset="utf-8">' +
       '<meta name="viewport" content="width=device-width, initial-scale=1">' +
-      '<title>Hors ligne — Agora Factures</title>' +
+      '<title>Hors connexion — Agora Factures</title>' +
       '<body style="font-family:system-ui,Segoe UI,Arial,sans-serif;margin:0;padding:32px;' +
-      'background:#f4f6f9;color:#1f2937">' +
-      '<div style="max-width:34rem;margin:10vh auto;background:#fff;border:1px solid #dfe5ee;' +
+      'background:#f7f9f8;color:#192b25">' +
+      '<div style="max-width:34rem;margin:10vh auto;background:#fff;border:1px solid #dfe8e3;' +
       'border-radius:16px;padding:24px">' +
-      '<h1 style="color:#12375f;margin:0 0 8px">Hors ligne</h1>' +
-      '<p>Cette page n\'a pas encore été mise en cache. Reconnectez-vous une fois pour ' +
-      'l\'ouvrir, puis réessayez.</p></div></body></html>',
+      '<h1 style="color:#12372f;margin:0 0 8px">Hors connexion</h1>' +
+      '<p>Cette page n\'a pas encore été préparée sur cet appareil. Reconnectez-vous une fois pour ' +
+      'l\'ouvrir, puis elle restera disponible sans connexion.</p></div></body></html>',
       { status: 503, statusText: 'Hors ligne', headers: { 'Content-Type': 'text/html; charset=utf-8' } }
     );
   });

@@ -1,7 +1,7 @@
 {
-  "name": "Agora Factures — factures et reçus hors ligne",
+  "name": "Agora Factures — Factures et reçus",
   "short_name": "Agora Factures",
-  "description": "Créez, gérez et exportez vos factures et reçus professionnels. Application 100 % locale : aucune donnée n'est envoyée sur un serveur, fonctionne hors connexion après le premier chargement.",
+  "description": "Créez vos factures et reçus, suivez vos paiements et partagez des documents professionnels, même sans connexion.",
   "lang": "fr",
   "dir": "ltr",
   "id": "agora-factures",
@@ -10,8 +10,8 @@
   "display": "standalone",
   "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
   "orientation": "any",
-  "background_color": "#f4f6f9",
-  "theme_color": "#12375f",
+  "background_color": "#f7f9f8",
+  "theme_color": "#12372f",
   "categories": ["business", "finance", "productivity", "utilities"],
   "prefer_related_applications": false,
   "icons": [

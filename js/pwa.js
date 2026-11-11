@@ -38,10 +38,10 @@
   };
 
   var LIBELLES = {
-    verification: 'Vérification du fonctionnement hors ligne…',
-    preparation: 'Mise en cache hors ligne en cours…',
-    actif: 'Prêt hors ligne',
-    indisponible: 'Hors ligne non disponible'
+    verification: 'Vérification du mode hors connexion…',
+    preparation: 'Préparation du mode hors connexion…',
+    actif: 'Disponible hors connexion',
+    indisponible: 'Hors connexion indisponible'
   };
 
   function definirEtat(code, options) {
@@ -57,11 +57,9 @@
     return etat;
   }
 
-  /** Met à jour tous les éléments d'interface qui reflètent l'état PWA. */
+  /** Met à jour les indications utiles, sans exposer les détails techniques. */
   function majAffichage() {
     var actif = etat.code === 'actif';
-
-    // 1. Texte d'état principal (#etat-pwa-texte / #etat-pwa-detail)
     var texte = app.$('#etat-pwa-texte');
     if (texte) {
       texte.textContent = LIBELLES[etat.code] || LIBELLES.verification;
@@ -69,34 +67,28 @@
     }
     var detail = app.$('#etat-pwa-detail');
     if (detail) {
-      var message = etat.detail;
-      if (actif && etat.ressourcesEnCache) {
-        message = 'Fonctionnement hors ligne vérifié — ' + etat.ressourcesEnCache +
-          ' ressource(s) en cache. Vos documents restent enregistrés sur cet appareil.';
-      } else if (!message && etat.code === 'preparation') {
-        message = 'Le Service Worker est installé ; la mise en cache se termine. Patientez quelques secondes.';
-      } else if (!message && etat.code === 'verification') {
-        message = '';
+      var message = '';
+      if (actif) {
+        message = 'Vous pouvez créer et consulter vos documents même sans connexion.';
+      } else if (etat.code === 'preparation') {
+        message = 'Cette préparation ne prend que quelques secondes.';
+      } else if (etat.code === 'indisponible') {
+        message = "Une connexion sera nécessaire pour rouvrir l'application.";
       }
       detail.textContent = message;
       detail.classList.toggle('cache', !message);
     }
 
-    // 2. Pastille « mise en cache hors ligne active » (compatibilité)
     app.$$('.cache-si-sw').forEach(function (e) {
       e.classList.toggle('cache', !actif);
     });
 
-    // 3. Alertes d'indisponibilité (raison exacte, jamais masquée)
     var alerteSansSw = app.$('#alerte-sans-sw');
     if (alerteSansSw) {
       var concerne = etat.code === 'indisponible' && etat.raison !== 'contexte';
       alerteSansSw.classList.toggle('cache', !concerne);
       var corpsSw = alerteSansSw.querySelector('p');
-      if (corpsSw && concerne) {
-        corpsSw.innerHTML = '<strong>Mode hors ligne indisponible.</strong> ' + CONSEQUENCE +
-          blocTechnique(texteRaison());
-      }
+      if (corpsSw && concerne) corpsSw.textContent = CONSEQUENCE + ' ' + texteRaison();
     }
     var alerteNonSecurise = app.$('#alerte-non-securise');
     if (alerteNonSecurise) {
@@ -104,44 +96,26 @@
       alerteNonSecurise.classList.toggle('cache', !nonSecurise);
       var corpsSec = alerteNonSecurise.querySelector('p');
       if (corpsSec && nonSecurise) {
-        corpsSec.innerHTML = '<strong>Connexion non sécurisée.</strong> ' +
-          'Cette page est ouverte sans chiffrement (adresse en <code>http</code>) : ' +
-          'le navigateur n\'active ni le mode hors ligne ni l\'installation. ' + CONSEQUENCE +
-          blocTechnique('Les fonctionnalités hors ligne exigent HTTPS (ou <code>localhost</code>). ' +
-            'Adresse actuelle : <code>' +
-            app.echapper(global.location.protocol + '//' + global.location.host) + '</code>.');
+        corpsSec.textContent = 'Ouvrez Agora Factures depuis son adresse sécurisée pour ' +
+          "l'installer et l'utiliser sans connexion. Vous pouvez continuer à gérer vos documents sur cette page.";
       }
     }
   }
 
-  /**
-   * Bloc « Détails techniques » replié : l'explication complète et le message
-   * d'origine du navigateur restent accessibles — un échec technique n'est
-   * jamais masqué — sans encombrer l'interface destinée aux commerçants.
-   */
-  function blocTechnique(contenuHtml) {
-    return '<details class="details-techniques">' +
-      '<summary>Détails techniques</summary>' +
-      '<div class="corps-technique">' + contenuHtml + '</div>' +
-      '</details>';
-  }
-
-  /** Conséquence concrète, en langage courant, pour l'utilisateur. */
-  var CONSEQUENCE = 'L\'application reste utilisable et vos documents sont ' +
-    'enregistrés sur cet appareil, mais elle ne pourra pas être ouverte sans connexion.';
+  /* Conséquence et action à effectuer : les erreurs brutes sont conservées
+     dans l'état interne et la console, jamais affichées à l'utilisateur. */
+  var CONSEQUENCE = 'Le mode hors connexion est indisponible. Vous pouvez continuer ' +
+    'à utiliser Agora Factures avec une connexion ; vos documents restent sur cet appareil.';
 
   function texteRaison() {
     switch (etat.raison) {
       case 'navigateur':
-        return 'Ce navigateur n\'expose pas les Service Workers. Les documents restent utilisables, mais l\'application ne pourra pas être ouverte sans réseau.';
-      case 'contexte':
-        return 'L\'application n\'est pas servie en HTTPS : le navigateur refuse d\'enregistrer le Service Worker. Publiez le site en HTTPS (ou ouvrez-le depuis <code>localhost</code>).';
+        return "Cet appareil ne propose pas cette fonctionnalité. Utilisez l'application avec une connexion.";
       case 'cache':
-        return 'Le Service Worker est actif mais aucune ressource n\'a pu être mise en cache.' + (etat.detail ? ' ' + app.echapper(etat.detail) : '');
+        return "La préparation n'a pas abouti. Rechargez la page pour réessayer.";
       case 'erreur':
       default:
-        return 'Le Service Worker n\'a pas pu être enregistré' + (etat.detail ? ' : ' + app.echapper(etat.detail) : '') +
-          '. Rechargez la page ; si le message persiste, vérifiez que le fichier <code>sw.js</code> est bien publié à la racine du site et servi en <code>text/javascript</code>.';
+        return 'Rechargez la page. Si le message persiste, réessayez plus tard avec une connexion stable.';
     }
   }
 
@@ -154,8 +128,8 @@
     indicateur.setAttribute('role', 'status');
     indicateur.setAttribute('aria-live', 'polite');
     indicateur.title = enLigne
-      ? 'Connecté — les fonctionnalités locales fonctionnent aussi sans réseau'
-      : 'Hors ligne — l\'application continue de fonctionner';
+      ? 'Connecté — vos documents restent enregistrés sur cet appareil'
+      : 'Hors connexion — vous pouvez continuer à travailler';
     var libelle = indicateur.querySelector('.libelle-etat');
     if (libelle) libelle.textContent = enLigne ? 'En ligne' : 'Hors ligne';
     var puce = indicateur.querySelector('.puce');
@@ -223,7 +197,7 @@
     if (bouton) {
       bouton.addEventListener('click', function () {
         if (!evenementInstallation) {
-          app.notifier('Ce navigateur ne propose pas l\'installation automatique. Utilisez le menu « Ajouter à l\'écran d\'accueil ».', 'info', 7000);
+          app.notifier('Pour installer Agora Factures, utilisez l\'option « Ajouter à l\'écran d\'accueil » de votre appareil.', 'info', 7000);
           return;
         }
         var evenement = evenementInstallation;

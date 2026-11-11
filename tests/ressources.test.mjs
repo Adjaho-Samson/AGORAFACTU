@@ -35,6 +35,7 @@ decrire('Structure du projet', () => {
     'sw.js',
     'README.md',
     'css/global.css',
+    'css/accueil.css',
     'css/document.css',
     'css/print.css',
     'css/dashboard.css',
@@ -158,7 +159,7 @@ decrire('Contrats DOM (identifiants attendus par les modules JS)', () => {
     'pages/parametres.html': ['#formulaire-parametres', '#v-nom', '#devise', '#decimales',
       '#num-prefixe-facture', '#num-modele', '#num-remise', '#tva-active', '#tva-taux',
       '#doc-modele', '#imp-logo', '#stock-rappel', '#bouton-exporter', '#fichier-import',
-      '#bouton-effacer', '#a-propos-version', '#liste-compteurs']
+      '#bouton-effacer', '#liste-compteurs']
   };
   Object.entries(attendus).forEach(([page, identifiants]) => {
     const contenu = readFileSync(resolve(RACINE, page), 'utf8');

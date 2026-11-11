@@ -118,3 +118,13 @@
   gap: 6px;
   font-weight: 600;
 }
+
+/* Recherche d'abord sur téléphone ; les critères avancés restent à un geste. */
+#filtres-basculer { display: none; }
+@media (max-width: 700px) {
+  #filtres-basculer:not(.cache) { display: inline-flex; }
+  #filtres-historique.filtres-mobile-prets:not(.filtres-ouverts) .filtres > .champ:not(.champ-recherche) { display: none; }
+  #filtres-historique.filtres-mobile-prets:not(.filtres-ouverts) .filtres { display: block; }
+  #filtres-historique.filtres-mobile-prets:not(.filtres-ouverts) .champ-recherche { margin-bottom: 0; }
+  #filtres-basculer span { margin-left: 2px; }
+}

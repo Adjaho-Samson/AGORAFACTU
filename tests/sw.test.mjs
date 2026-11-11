@@ -187,7 +187,7 @@ decrire('Service Worker — installation et précache', () => {
     await worker.declencher('activate', {});
     const noms = await worker.caches.keys();
     faux(noms.some((n) => n.indexOf('v1.0.0') !== -1), 'les anciens caches doivent être supprimés : ' + noms.join(', '));
-    vrai(noms.some((n) => n.indexOf('v1.1.0') !== -1), 'le cache de la version courante doit être conservé');
+    vrai(noms.some((n) => n.indexOf('v1.2.0') !== -1), 'le cache de la version courante doit être conservé');
     vrai(worker.self.claimAppele === true, 'clients.claim() doit être appelé à l\'activation');
   });
 

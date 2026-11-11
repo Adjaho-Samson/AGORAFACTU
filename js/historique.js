@@ -501,7 +501,7 @@
       }
       app.confirmer({
         titre: 'Supprimer définitivement ?',
-        message: 'Le document « ' + (d.numero || 'brouillon') + ' » sera supprimé de ce navigateur.',
+        message: 'Le document « ' + (d.numero || 'brouillon') + ' » sera définitivement supprimé de cet appareil.',
         details: d.numero ? 'Le numéro ' + d.numero + ' ne sera jamais réattribué.' : '',
         texteConfirmer: 'Supprimer',
         danger: true
@@ -597,6 +597,20 @@
 
     var actualiser = app.$('#bouton-actualiser');
     if (actualiser) actualiser.addEventListener('click', function () { rafraichir(); });
+
+    /* Sur téléphone, la recherche reste immédiatement visible et les autres
+       critères sont disponibles à la demande. Sans JavaScript, tout reste ouvert. */
+    var basculer = app.$('#filtres-basculer');
+    var zoneFiltres = app.$('#filtres-historique');
+    if (basculer && zoneFiltres) {
+      zoneFiltres.classList.add('filtres-mobile-prets');
+      basculer.classList.remove('cache');
+      basculer.addEventListener('click', function () {
+        var ouvert = zoneFiltres.classList.toggle('filtres-ouverts');
+        basculer.setAttribute('aria-expanded', String(ouvert));
+        basculer.querySelector('span').textContent = ouvert ? 'Masquer les filtres' : 'Filtres';
+      });
+    }
 
     rafraichir();
   }

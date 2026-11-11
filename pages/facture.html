@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Nouveau document — Agora Factures</title>
 <meta name="description" content="Créer une facture ou un reçu : vendeur, client, articles, remises, TVA, aperçu en temps réel.">
-<meta name="theme-color" content="#12375f">
+<meta name="theme-color" content="#12372f">
 <link rel="manifest" href="../manifest.json">
 <link rel="icon" href="../assets/icons/favicon-32.png" sizes="32x32">
 <link rel="apple-touch-icon" href="../assets/icons/apple-touch-icon.png">
@@ -19,8 +19,8 @@
 
 <header class="app-header">
   <div class="barre">
-    <a class="marque" href="../index.html">
-      <img src="../assets/icons/icon-192.png" alt="" width="34" height="34">
+    <a class="marque" href="../index.html" aria-label="Agora Factures — Accueil">
+      <img src="../assets/icons/icon-192.png" alt="" width="40" height="40">
       <span class="marque-texte">Agora Factures<small>FACTURES &amp; REÇUS</small></span>
     </a>
     <div class="actions">
@@ -32,11 +32,11 @@
   </div>
   <nav class="app-nav" aria-label="Navigation principale">
     <ul>
-      <li><a href="../index.html">Accueil</a></li>
-      <li><a href="dashboard.html">Tableau de bord</a></li>
-      <li><a href="facture.html" aria-current="page">Nouveau document</a></li>
-      <li><a href="historique.html">Historique</a></li>
-      <li><a href="parametres.html">Paramètres</a></li>
+      <li><a href="../index.html" data-icone="accueil"><span class="nav-libelle nav-libelle-unique">Accueil</span></a></li>
+      <li><a href="dashboard.html" data-icone="tableau"><span class="nav-libelle">Tableau de bord</span><span class="nav-libelle-court">Suivi</span></a></li>
+      <li><a href="facture.html" aria-current="page" data-icone="plus"><span class="nav-libelle">Nouveau document</span><span class="nav-libelle-court">Créer</span></a></li>
+      <li><a href="historique.html" data-icone="historique"><span class="nav-libelle">Historique</span><span class="nav-libelle-court">Documents</span></a></li>
+      <li><a href="parametres.html" data-icone="parametres"><span class="nav-libelle">Paramètres</span><span class="nav-libelle-court">Réglages</span></a></li>
     </ul>
   </nav>
 </header>
@@ -46,7 +46,7 @@
   <div class="entete-page">
     <div class="titre">
       <h1 id="titre-page-editeur">Nouvelle facture</h1>
-      <p class="sous-titre">Les montants sont recalculés à chaque saisie. Rien n'est envoyé sur un serveur.</p>
+      <p class="sous-titre">Renseignez les informations du document. Les totaux et l'aperçu se mettent à jour pendant votre saisie.</p>
     </div>
     <div class="outils">
       <span id="bloc-statut" class="pastille pastille-gris">Brouillon</span>
@@ -128,7 +128,7 @@
               <input type="file" id="vendeur-logo" accept="image/png,image/jpeg,image/webp,image/svg+xml" class="petit">
               <button id="vendeur-logo-supprimer" type="button" class="btn btn-fantome btn-petit">Retirer le logo</button>
             </div>
-            <div class="aide petit muet">Le logo est redimensionné localement puis conservé avec le document.</div>
+            <div class="aide petit muet">Votre logo apparaîtra sur ce document selon vos choix d'impression.</div>
           </div>
         </div>
       </section>
@@ -172,7 +172,7 @@
             <div class="champ">
               <label for="doc-numero">Numéro</label>
               <input type="text" id="doc-numero" readonly aria-readonly="true" aria-describedby="aide-numero">
-              <div class="aide" id="aide-numero">Attribué automatiquement à l'enregistrement — jamais réattribué.</div>
+              <div class="aide" id="aide-numero">Le prochain numéro disponible est attribué lors de l'enregistrement.</div>
               <div class="erreur"></div>
             </div>
             <div class="champ">
@@ -261,7 +261,7 @@
           </table>
         </div>
         <div class="actions-document">
-          <span class="petit muet">Les montants sont arrondis au centime le plus proche (règle half-up) puis additionnés.</span>
+          <span class="petit muet">Saisissez une quantité et un prix : le montant de chaque ligne et le total sont calculés automatiquement.</span>
         </div>
       </section>
 
@@ -387,9 +387,17 @@
 
 </main>
 
+<div class="actions-mobile-rapides non-imprimable" aria-label="Enregistrer le document">
+  <button id="bouton-brouillon-mobile" type="button" class="btn btn-fantome">Brouillon</button>
+  <button id="bouton-enregistrer-mobile" type="button" class="btn btn-principal">
+    <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5 9 17.5 20 6.5"/></svg>
+    Enregistrer
+  </button>
+</div>
+
 <footer class="app-footer">
   <div class="contenu">
-    <span>Agora Factures — données locales, sans serveur.</span>
+    <span>Agora Factures — Vos documents restent sur cet appareil.</span>
     <span class="petit">Astuce : « Imprimer » ouvre la boîte d'impression du navigateur, qui permet aussi d'enregistrer en PDF.</span>
   </div>
 </footer>
@@ -418,6 +426,11 @@
     });
     if (pdf2) pdf2.addEventListener('click', function () {
       document.getElementById('bouton-pdf').click();
+    });
+    ['brouillon', 'enregistrer'].forEach(function (action) {
+      var mobile = document.getElementById('bouton-' + action + '-mobile');
+      var principal = document.getElementById('bouton-' + action);
+      if (mobile && principal) mobile.addEventListener('click', function () { principal.click(); });
     });
   })();
 </script>

@@ -69,7 +69,7 @@
 }
 .graphe-legende span { display: inline-flex; align-items: center; gap: 6px; }
 .graphe-legende .puce { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
-.graphe-legende .puce-facture { background: #a9caf5; }
+.graphe-legende .puce-facture { background: #9ed8c5; }
 .graphe-legende .puce-encaisse { background: var(--bleu-fonce); }
 
 .repartition { display: flex; flex-direction: column; gap: var(--e3); }
@@ -163,3 +163,13 @@
     margin-left: auto;
   }
 }
+
+/* Quatre décisions principales par rangée sur grand écran, deux sur mobile. */
+@media (min-width: 1000px) {
+  .grille-kpi { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+.carte-stat { border-top-width: 2px; box-shadow: 0 3px 14px rgba(18, 55, 47, .035); }
+.carte-stat .libelle { line-height: 1.4; letter-spacing: .45px; }
+.carte-stat .valeur { font-size: clamp(1.25rem, 2.1vw, 1.65rem); letter-spacing: -.025em; }
+.carte-stat .aide { line-height: 1.45; }
+#zone-graphique { min-width: 0; overflow-x: auto; }

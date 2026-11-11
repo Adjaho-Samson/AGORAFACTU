@@ -170,7 +170,7 @@
       var y = marge.haut + h - (h * i / 4);
       racine.appendChild(svg('line', {
         x1: marge.gauche, y1: y, x2: largeur - marge.droite, y2: y,
-        stroke: i === 0 ? '#c7d0de' : '#eef1f6', 'stroke-width': 1
+        stroke: i === 0 ? '#c4d2cb' : '#edf2ef', 'stroke-width': 1
       }));
       var etiquette = svg('text', { x: marge.gauche - 6, y: y + 3, 'text-anchor': 'end', class: 'graphe-axe' });
       etiquette.textContent = options.formaterCourt ? options.formaterCourt(valeur) : String(Math.round(valeur));
@@ -185,13 +185,13 @@
       if (hTotal > 0) {
         racine.appendChild(svg('rect', {
           x: x, y: yBase - hTotal, width: largeurBarre, height: Math.max(1, hTotal),
-          rx: 2, fill: '#a9caf5', class: 'barre-facture'
+          rx: 2, fill: '#9ed8c5', class: 'barre-facture'
         }));
       }
       if (hEncaisse > 0) {
         racine.appendChild(svg('rect', {
           x: x, y: yBase - hEncaisse, width: largeurBarre, height: Math.max(1, hEncaisse),
-          rx: 2, fill: '#12375f', class: 'barre-encaisse'
+          rx: 2, fill: '#12372f', class: 'barre-encaisse'
         }));
       }
       if (b.facture > 0 || b.encaisse > 0) {
@@ -305,9 +305,9 @@
     if (zoneRepartition) {
       zoneRepartition.innerHTML = '';
       var items = [
-        { libelle: 'Payés', valeur: statsPeriode.payes, couleur: '#16803d' },
+        { libelle: 'Payés', valeur: statsPeriode.payes, couleur: '#147d46' },
         { libelle: 'En attente', valeur: statsPeriode.enAttente, couleur: '#f59e0b' },
-        { libelle: 'Partiellement payés', valeur: statsPeriode.partiels, couleur: '#1d6fd8' },
+        { libelle: 'Partiellement payés', valeur: statsPeriode.partiels, couleur: '#0f766e' },
         { libelle: 'En retard', valeur: statsPeriode.enRetard, couleur: '#c62828' },
         { libelle: 'Annulés', valeur: statsPeriode.annules, couleur: '#8a95a5' }
       ].filter(function (i) { return i.valeur > 0; });

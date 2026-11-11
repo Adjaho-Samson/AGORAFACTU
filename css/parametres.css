@@ -78,3 +78,33 @@
   content: ""; position: absolute; left: 8px; right: 8px; bottom: 8px; height: 18px;
   background: repeating-linear-gradient(to bottom, #e3e8ef 0 3px, transparent 3px 6px);
 }
+
+/* Repères de navigation dans une page de réglages volontairement complète. */
+.sections-parametres { width: 100%; max-width: 960px; }
+.sommaire-parametres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e2);
+  margin-bottom: var(--e5);
+}
+.sommaire-parametres a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 7px 14px;
+  border: 1px solid var(--bord);
+  border-radius: 999px;
+  color: var(--texte-doux);
+  background: var(--blanc);
+  font-size: .82rem;
+  font-weight: 650;
+}
+.sommaire-parametres a:hover { color: var(--bleu); border-color: var(--bleu-bord); background: var(--bleu-pale); text-decoration: none; }
+.sections-parametres > .carte, section.sections-parametres { scroll-margin-top: calc(var(--hauteur-entete, 112px) + var(--e4)); }
+.liste-actions .action .texte span { display: block; margin-top: 3px; line-height: 1.55; }
+#fichier-import { padding: var(--e2); border: 1px dashed var(--bord-fort); border-radius: var(--rayon); background: var(--gris-clair); }
+
+@media (max-width: 520px) {
+  .sommaire-parametres { display: grid; grid-template-columns: 1fr 1fr; }
+  .sommaire-parametres a { justify-content: center; }
+}
